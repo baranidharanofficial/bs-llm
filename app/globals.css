@@ -28,6 +28,10 @@ body {
   animation-duration: 0.5s;
 }
 
+textarea {
+  resize: none;
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(250px);
