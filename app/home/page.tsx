@@ -53,7 +53,7 @@ export default function Home() {
 
                     <div className='flex flex-col h-[calc(93vh-140px)] justify-evenly overflow-auto'>
                         <div>
-                            <p className='text-[#143F8D] font-medium text-[24px] mb-6'>Hello, I'm PARK</p>
+                            <p className='text-[#143F8D] font-medium text-[24px] mb-6'>Hello, I&apos;m PARK</p>
                             <p className='text-[#143F8D] text-[18px] mb-20'>Your AI buddy for answering questions about construction rules in India and the UAE.</p>
                         </div>
 
