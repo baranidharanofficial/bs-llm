@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Login() {
   return (
     <div className="h-screen w-screen bg-[#143F8D] flex flex-col items-center justify-center overflow-hidden">
-      <p className=" font-medium text-[32px]">Hello, I'm PARK</p>
+      <p className=" font-medium text-[32px]">Hello, I&apos;m PARK</p>
       <Image src="/3d-logo.png" alt="Logo Image" width={100} height={100} className=" w-[270px]" />
       <p className="text-center font-medium text-[20px] w-[300px] mb-5">Your AI companion to answer your construction related queries..</p>
       <Link href="/home">
