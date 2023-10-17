@@ -24,7 +24,7 @@ export default function Home() {
     }
 
     return (
-        <main className="overflow-hidden flex h-screen w-screen flex-col items-center bg-gray-50 text-black">
+        <main className="overflow-hidden flex h-screen max-sm:h-[90vh] w-screen flex-col items-center bg-gray-50 text-black">
             <div className={sideNav ? "w-[250px] z-10 slide-in absolute right-0 top-0 h-screen bg-[#143F8D] shadow-2xl p-4 hidden flex-col justify-between nav-slide max-sm:flex" : "w-[250px] z-10 absolute right-0 top-0 h-screen bg-[#143F8D] shadow-2xl p-4 hidden flex-col justify-between nav-slide2"}>
                 <div>
                     <div className='flex items-center justify-between w-full mb-10'>
