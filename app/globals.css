@@ -63,18 +63,19 @@ textarea {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #ffffff40;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #53D878;
   border-radius: 4px;
+
 }
 
 /* Handle on hover */

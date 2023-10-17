@@ -1,14 +1,27 @@
 "use client"
 
 import Image from 'next/image';
-import { useState } from 'react';
-import { MdSend, MdMenu, MdClose } from 'react-icons/md';
+import { ChangeEvent, useState } from 'react';
+import { MdMenu, MdClose } from 'react-icons/md';
 
 export default function Home() {
 
     const [sideNav, showSideNav] = useState(false);
     const [country, setCountry] = useState("IND");
+    const [showChat, setShowChat] = useState(false);
     const [query, setQuery] = useState("");
+
+    const handleTextareaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        setQuery(e.target.value);
+        e.target.style.height = 'auto';
+        e.target.style.height = e.target.scrollHeight + 'px';
+    };
+
+    const sendQuery = () => {
+        if (query.length > 0) {
+            setShowChat(true);
+        }
+    }
 
     return (
         <main className="overflow-hidden flex h-screen w-screen flex-col items-center bg-gray-50 text-black">
@@ -49,9 +62,9 @@ export default function Home() {
                     </div>
                 </nav>
 
-                <div className="h-[85vh] max-sm:h-[93vh] flex flex-col">
+                <div className="h-[85vh] max-sm:h-[80vh] flex flex-col">
 
-                    <div className='flex flex-col h-[calc(93vh-140px)] justify-evenly overflow-auto'>
+                    {!showChat ? <div className='flex flex-col h-[calc(93vh-140px)] justify-evenly overflow-auto'>
                         <div>
                             <p className='text-[#143F8D] font-medium text-[24px] mb-6'>Hello, I&apos;m PARK</p>
                             <p className='text-[#143F8D] text-[18px] mb-20'>Your AI buddy for answering questions about construction rules in India and the UAE.</p>
@@ -65,7 +78,39 @@ export default function Home() {
                             </div>
                         </div>
 
+                    </div> : <div className='flex flex-col h-[calc(93vh-140px)] justify-start overflow-auto pt-4'>
+
+                        <div className='flex items-start justify-start mb-4'>
+                            <Image src="/question.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                            <p className=' font-semibold text-[16px] text-[#143F8D]'>Offset required from 33 KV electric line?</p>
+                        </div>
+
+                        <div className='flex items-start justify-start'>
+                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                            <div className=''>
+                                <p className=' font-normal text-[16px] text-black mb-5'>The offset required from a 33 KV electric line is 2 meters (2 + 0.3 m for every additional 33,000 volts or part thereof).</p>
+
+                                <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+
+                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p>
+
+                                <div className='text-[#868686] text-[14px] text-center'>
+                                    <p>© 2023 BuildSuite. All Rights Reserved.</p>
+
+                                    <div className='flex items-center justify-between'>
+                                        <p>Home Page</p>
+                                        <p>Terms of Use</p>
+                                        <p>Privacy Policy</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
+
+
+                    }
 
                     <div className='h-[140px] text-[#868686] font-bold'></div>
                 </div>
@@ -73,9 +118,11 @@ export default function Home() {
 
                 <div className=' bg-[#143F8D] absolute bottom-0 left-0 w-screen p-3'>
                     <div className='bg-[#30569C] rounded-md w-full py-2 pl-4 pr-2 flex items-center justify-between mb-2'>
-                        <textarea rows={1} placeholder="Ask your question here." className="text-white border-none outline-none w-[85%] bg-transparent text-[16px]" />
 
-                        <button className='bg-[#37AD4A] rounded-sm'>
+                        <textarea rows={1} value={query} onChange={(evt) => handleTextareaChange(evt)} placeholder="Ask your question here." className="text-white max-h-40 border-none outline-none w-[85%] bg-transparent text-[16px]" />
+
+
+                        <button onClick={() => sendQuery()} className={query.length == 0 ? '' : 'bg-[#37AD4A] rounded-sm self-end'}>
                             <Image src="/send.svg" alt='Send Image' width={20} height={20} className=' p-2 h-[35px] w-[35px]' />
                         </button>
                     </div>
@@ -86,7 +133,7 @@ export default function Home() {
 
             </div>
 
-        </main>
+        </main >
     )
 }
 
