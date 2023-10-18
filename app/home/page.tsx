@@ -22,6 +22,7 @@ export default function Home() {
     const [placeChat, setPlaceChat] = useState("");
     const [disabled, setDisabled] = useState(false);
     const divRef = useRef<HTMLDivElement | null>(null);
+    const [showBS, setShowBS] = useState(false);
 
     const [chats, setChats] = useState<Chat[]>([]);
 
@@ -47,7 +48,7 @@ export default function Home() {
     }
 
     function typeWriter(i: number, txt: string) {
-        var speed = 50;
+        var speed = 40;
 
         if (i < txt.length) {
             setDisabled(true);
@@ -72,7 +73,7 @@ export default function Home() {
     }
 
     function typeWriter2(i: number, txt: string) {
-        var speed = 50;
+        var speed = 40;
 
         if (i < txt.length) {
             setDisabled(true);
@@ -119,7 +120,8 @@ export default function Home() {
 
 
     return (
-        <main className="overflow-hidden flex h-screen max-sm:h-[90vh] w-screen flex-col items-center bg-gray-50 text-black">
+        <main className="overflow-hidden flex h-[100dvh] w-screen flex-col items-center bg-gray-50 text-black">
+
             <div className={sideNav ? "w-[250px] z-10 slide-in absolute right-0 top-0 h-screen bg-[#143F8D] shadow-2xl p-4 hidden flex-col justify-between nav-slide max-sm:flex" : "w-[250px] z-10 absolute right-0 top-0 h-screen bg-[#143F8D] shadow-2xl p-4 hidden flex-col justify-between nav-slide2"}>
                 <div>
                     <div className='flex items-center justify-between w-full mb-10'>
@@ -137,9 +139,43 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="w-[1200px] max-xl:w-[1000px] max-lg:w-full max-lg:px-[3vw] mx-0 h-screen flex flex-col justify-start overflow-hidden">
+            {showBS && <div className='absolute top-0 left-0 w-[100vw] h-[100dvh] pt-6 pb-20 px-6 bg-[#143F8D] flex flex-col items-center justify-between'>
 
-                <nav className="w-full h-[10vh] flex items-center justify-between max-sm:h-[7vh]">
+                <div>
+                    <div onClick={() => setShowBS(false)} className="w-full text-[36px] text-white text-xl flex justify-end">
+                        <MdClose></MdClose>
+                    </div>
+
+
+                    <img alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className=' self-start h-[6vh] w-auto mt-6' />
+
+                    <div className='text-[#37AD4A] font-semibold text-[24px] ml-2 mt-5'>
+                        <p>WORLD&apos;S FIRST AI POWERED CONSTRUCTION MANAGEMENT PLATFORM</p>
+                    </div>
+                </div>
+
+
+                <div className='w-[93%] text-center'>
+                    <button className='w-full text-[16px] bg-[#37AD4A] text-white font-semibold py-2 rounded-sm justify-end'>
+                        ASK FOR DEMO
+                    </button>
+                    <button className='mt-5 text-[#37AD4A] font-semibold'>
+                        VISIT WEBSITE
+                    </button>
+                </div>
+
+
+            </div>}
+
+
+            <div className="w-[1200px] max-xl:w-[1000px] max-lg:w-full h-full flex flex-col justify-start">
+
+                <div className='h-[7%] bg-[#143F8D] px-3 flex items-center justify-between'>
+                    <img alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className=' h-[3vh] w-auto' />
+                    <p onClick={() => setShowBS(true)} className=' text-white text-[12px]'>KNOW MORE</p>
+                </div>
+
+                <nav className="h-[7%] w-full bg-white shadow-md flex items-center justify-between max-lg:px-[3vw]">
                     <Image alt='BuildSuite Logo' src={"/logo3.png"} width={40} height={40} className=' h-[5vh] w-auto' />
 
                     <div className='max-sm:flex items-center justify-end hidden'>
@@ -157,122 +193,94 @@ export default function Home() {
                     </div>
                 </nav>
 
-                <div className="h-[85vh] max-sm:h-[80vh] flex flex-col">
+                <div ref={divRef} className="h-[66%] flex flex-col smooth-scroll overflow-x-hidden overflow-y-auto px-3">
 
-                    <div ref={divRef} className='flex flex-col min-h-[calc(93vh-140px)] smooth-scroll overflow-x-hidden overflow-y-auto'>
+                    <div className='flex items-start justify-start mt-2 mb-8'>
+                        <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                        <div>
+                            <p className='text-[#143F8D] font-medium text-[24px] mb-1'>Hello, I&apos;m PARK</p>
+                            <p className='text-[#143F8D] font-medium text-[20px] mb-4'>Your construction rules assistant.</p>
+                            <p className='text-black text-[16px] mb-10'> We&apos;re currently in beta, and we&apos;re here to assist you with building rules and compliance in India and the UAE. Please select your country to get started.</p>
 
-                        <div className='flex items-start justify-start mt-2 mb-8'>
-                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                            <div>
-                                <p className='text-[#143F8D] font-medium text-[24px] mb-1'>Hello, I&apos;m PARK</p>
-                                <p className='text-[#143F8D] font-medium text-[20px] mb-4'>Your construction rules assistant.</p>
-                                <p className='text-black text-[16px] mb-10'> We&apos;re currently in beta, and we&apos;re here to assist you with building rules and compliance in India and the UAE. Please select your country to get started.</p>
-
-                                <p className='mb-2'>Select Country:</p>
-                                <div className='flex'>
-                                    <p onClick={() => country.length == 0 && sendCountryQuery("India")} className={country == "India" ? "bg-[#37AD4A] px-5 py-3 text-[14px] text-white mr-2" : 'px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'} > India</p>
-                                    <p onClick={() => country.length == 0 && sendCountryQuery("UAE")} className={country == "UAE" ? "bg-[#37AD4A] px-5 py-3 text-[14px] text-white mr-2" : 'px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'}>UAE</p>
-                                </div>
+                            <p className='mb-2'>Select Country:</p>
+                            <div className='flex'>
+                                <p onClick={() => country.length == 0 && sendCountryQuery("India")} className={country == "India" ? "bg-[#37AD4A] px-5 py-3 text-[14px] text-white mr-2" : 'px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'} > India</p>
+                                <p onClick={() => country.length == 0 && sendCountryQuery("UAE")} className={country == "UAE" ? "bg-[#37AD4A] px-5 py-3 text-[14px] text-white mr-2" : 'px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'}>UAE</p>
                             </div>
                         </div>
+                    </div>
 
-                        {/* <div className='flex items-start justify-start mb-4'>
+                    {/* <div className='flex items-start justify-start mb-4'>
                             <Image src="/question.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                             <p className=' font-semibold text-[16px] text-[#143F8D]'>Offset required from 33 KV electric line?</p>
                         </div> */}
 
-                        {country.length > 0 && <div className='flex items-start justify-start mb-8'>
-                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                            <div className=''>
-                                <p className='font-normal text-[16px] text-black mb-20'>{countryChat}</p>
+                    {country.length > 0 && <div className='flex items-start justify-start mb-8'>
+                        <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                        <div className=''>
+                            <p className='font-normal text-[16px] text-black'>{countryChat}</p>
 
-                                {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                            {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
                                 <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
-                                <div className='text-[#868686] text-[14px] text-center'>
-                                    <p>© 2023 BuildSuite. All Rights Reserved.</p>
 
-                                    <div className='flex items-center justify-between'>
-                                        <p>Home Page</p>
-                                        <p>Terms of Use</p>
-                                        <p>Privacy Policy</p>
-                                    </div>
-                                </div>
+                        </div>
+
+                    </div>}
+
+                    {place.length > 0 && <div className='flex items-start justify-start mb-8'>
+                        <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                        <div className=''>
+                            <p className='font-normal text-[16px] text-black'>{placeChat}</p>
+
+                            {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
+
+                        </div>
+
+                    </div>}
+
+
+                    {chats.map((data: Chat) => {
+                        return <div key={data.query}>
+                            <div className='flex items-start justify-start mb-4'>
+                                <Image src="/question.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                                <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query}</p>
                             </div>
 
-                        </div>}
+                            <div className='flex items-start justify-start mb-8'>
+                                <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                                <div className=''>
+                                    <p className='font-normal text-[16px] text-black'>{data.answer}</p>
 
-                        {place.length > 0 && <div className='flex items-start justify-start mb-8'>
-                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                            <div className=''>
-                                <p className='font-normal text-[16px] text-black mb-20'>{placeChat}</p>
-
-                                {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                                    {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
                                 <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
-                                <div className='text-[#868686] text-[14px] text-center'>
-                                    <p>© 2023 BuildSuite. All Rights Reserved.</p>
 
-                                    <div className='flex items-center justify-between'>
-                                        <p>Home Page</p>
-                                        <p>Terms of Use</p>
-                                        <p>Privacy Policy</p>
-                                    </div>
                                 </div>
+
                             </div>
+                        </div>
+                    })}
 
-                        </div>}
+                    <div className='text-[#868686] text-[14px] text-center ml-10 mt-14 pb-3'>
+                        <p>© 2023 BuildSuite. All Rights Reserved.</p>
 
-
-                        {chats.map((data: Chat) => {
-                            return <div key={data.query}>
-                                <div className='flex items-start justify-start mb-4'>
-                                    <Image src="/question.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                                    <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query}</p>
-                                </div>
-
-                                <div className='flex items-start justify-start mb-8'>
-                                    <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                                    <div className=''>
-                                        <p className='font-normal text-[16px] text-black mb-20'>{data.answer}</p>
-
-                                        {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
-                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
-                                        <div className='text-[#868686] text-[14px] text-center'>
-                                            <p>© 2023 BuildSuite. All Rights Reserved.</p>
-
-                                            <div className='flex items-center justify-between'>
-                                                <p>Home Page</p>
-                                                <p>Terms of Use</p>
-                                                <p>Privacy Policy</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        })}
-
-
-
+                        <div className='flex items-center justify-between'>
+                            <p>Home Page</p>
+                            <p>Terms of Use</p>
+                            <p>Privacy Policy</p>
+                        </div>
                     </div>
-                    <div className='h-[140px] text-[#868686] font-bold'></div>
                 </div>
 
-
-                <div className=' bg-[#143F8D] absolute bottom-0 left-0 w-screen p-3'>
+                <div className='h-[20%] bg-[#143F8D] w-screen px-2 py-3 '>
                     <div className='bg-[#30569C] rounded-md w-full py-2 pl-4 pr-2 flex items-center justify-between mb-2'>
-
                         <textarea disabled={country.length == 0 || disabled} rows={1} value={query} onChange={(evt) => handleTextareaChange(evt)} placeholder="Ask your question here." className="text-white max-h-40 border-none outline-none w-[85%] bg-transparent text-[16px]" />
-
-
                         <button onClick={() => place.length > 0 ? sendQuery() : sendPlaceQuery()} className={query.length == 0 ? '' : 'bg-[#37AD4A] rounded-sm self-end'}>
                             <Image src="/send.svg" alt='Send Image' width={20} height={20} className=' p-2 h-[35px] w-[35px]' />
                         </button>
                     </div>
-
                     <p className='text-[#D6D6D6] text-[12px] font-medium text-center'>Currently in beta testing. Your feedback is invaluable for enhancing our service. Please report errors or share suggestions.</p>
-
                 </div>
-
             </div>
 
         </main >
