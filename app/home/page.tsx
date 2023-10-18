@@ -166,7 +166,7 @@ export default function Home() {
                             <div>
                                 <p className='text-[#143F8D] font-medium text-[24px] mb-1'>Hello, I&apos;m PARK</p>
                                 <p className='text-[#143F8D] font-medium text-[20px] mb-4'>Your construction rules assistant.</p>
-                                <p className='text-black text-[16px] mb-10'> We're currently in beta, and we're here to assist you with building rules and compliance in India and the UAE. Please select your country to get started.</p>
+                                <p className='text-black text-[16px] mb-10'> We&apos;re currently in beta, and we&apos;re here to assist you with building rules and compliance in India and the UAE. Please select your country to get started.</p>
 
                                 <p className='mb-2'>Select Country:</p>
                                 <div className='flex'>
@@ -223,7 +223,7 @@ export default function Home() {
 
 
                         {chats.map((data: Chat) => {
-                            return <div>
+                            return <div key={data.query}>
                                 <div className='flex items-start justify-start mb-4'>
                                     <Image src="/question.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query}</p>
