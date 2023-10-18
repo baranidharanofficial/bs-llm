@@ -28,6 +28,10 @@ body {
   animation-duration: 0.5s;
 }
 
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
 textarea {
   resize: none;
 }

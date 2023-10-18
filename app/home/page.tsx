@@ -1,15 +1,35 @@
 "use client"
 
 import Image from 'next/image';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { MdMenu, MdClose } from 'react-icons/md';
+
+
+interface Chat {
+    query: string;
+    answer: string;
+}
+
 
 export default function Home() {
 
     const [sideNav, showSideNav] = useState(false);
-    const [country, setCountry] = useState("IND");
+    const [country, setCountry] = useState("");
+    const [place, setPlace] = useState("");
     const [showChat, setShowChat] = useState(false);
     const [query, setQuery] = useState("");
+    const [countryChat, setCountryChat] = useState("");
+    const [placeChat, setPlaceChat] = useState("");
+    const [disabled, setDisabled] = useState(false);
+    const divRef = useRef<HTMLDivElement | null>(null);
+
+    const [chats, setChats] = useState<Chat[]>([]);
+
+    const scrollToBottom = () => {
+        if (divRef.current) {
+            divRef.current.scrollTop = divRef.current.scrollHeight;
+        }
+    };
 
     const handleTextareaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setQuery(e.target.value);
@@ -17,11 +37,86 @@ export default function Home() {
         e.target.style.height = e.target.scrollHeight + 'px';
     };
 
-    const sendQuery = () => {
-        if (query.length > 0) {
-            setShowChat(true);
+    const sendCountryQuery = (countrySelected: string) => {
+        setCountry(countrySelected);
+        typeWriter(0,
+            `Great! Thanks for specifying your country. To give you the most accurate information, could 
+                you please tell me which specific city or 
+                area within ` + countrySelected + ` your query is about? This will help me tailor the 
+                response to your location. Feel free to type the name of your city or area.`);
+    }
+
+    function typeWriter(i: number, txt: string) {
+        var speed = 50;
+
+        if (i < txt.length) {
+            setDisabled(true);
+            setTimeout(() => {
+                setCountryChat(txt.substring(0, i + 1) + '|');
+                typeWriter(i + 1, txt);
+                scrollToBottom();
+            }, speed);
+        } else {
+            setDisabled(false);
+            setCountryChat(txt);
         }
     }
+
+    const sendPlaceQuery = async () => {
+        setPlace(query);
+        typeWriter2(0,
+            `Perfect, ` + query + ` it is! Now, go ahead and ask your construction-related question. 
+            If you're unsure how to format it, you can use the following as an example: \n\n
+            For instance, you might ask, "What are the zoning regulations for residential buildings in Mumbai, India?"`);
+        setQuery("");
+    }
+
+    function typeWriter2(i: number, txt: string) {
+        var speed = 50;
+
+        if (i < txt.length) {
+            setDisabled(true);
+            setTimeout(() => {
+                setPlaceChat(txt.substring(0, i + 1) + '|');
+                typeWriter2(i + 1, txt);
+                scrollToBottom();
+            }, speed);
+        } else {
+            setDisabled(false);
+            setPlaceChat(txt);
+        }
+    }
+
+
+    const sendQuery = () => {
+
+        let cChat: Chat = {
+            query: query,
+            answer: "Sorry I'm still in development process. Come back after some time."
+        }
+
+        setChats([...chats, cChat]);
+
+        setTimeout(() => scrollToBottom(), 500);
+        setQuery("");
+    }
+
+    function typeWriter3(i: number, txt: string) {
+        var speed = 50;
+
+        if (i < txt.length) {
+            setDisabled(true);
+            setTimeout(() => {
+                setCountryChat(txt.substring(0, i + 1) + '|');
+                typeWriter(i + 1, txt);
+                scrollToBottom();
+            }, speed);
+        } else {
+            setDisabled(false);
+            setCountryChat(txt);
+        }
+    }
+
 
     return (
         <main className="overflow-hidden flex h-screen max-sm:h-[90vh] w-screen flex-col items-center bg-gray-50 text-black">
@@ -64,36 +159,35 @@ export default function Home() {
 
                 <div className="h-[85vh] max-sm:h-[80vh] flex flex-col">
 
-                    {!showChat ? <div className='flex flex-col h-[calc(93vh-140px)] justify-evenly overflow-auto'>
-                        <div>
-                            <p className='text-[#143F8D] font-medium text-[24px] mb-6'>Hello, I&apos;m PARK</p>
-                            <p className='text-[#143F8D] text-[18px] mb-20'>Your AI buddy for answering questions about construction rules in India and the UAE.</p>
-                        </div>
+                    <div ref={divRef} className='flex flex-col min-h-[calc(93vh-140px)] smooth-scroll overflow-x-hidden overflow-y-auto'>
 
+                        <div className='flex items-start justify-start mt-2 mb-8'>
+                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                            <div>
+                                <p className='text-[#143F8D] font-medium text-[24px] mb-1'>Hello, I&apos;m PARK</p>
+                                <p className='text-[#143F8D] font-medium text-[20px] mb-4'>Your construction rules assistant.</p>
+                                <p className='text-black text-[16px] mb-10'> We're currently in beta, and we're here to assist you with building rules and compliance in India and the UAE. Please select your country to get started.</p>
 
-                        <div>
-                            <p className='text-[14px] mb-2'>Sample Questions</p>
-                            <div className='bg-[#DCF3E0]'>
-                                <p className='text-[16px] text-[#248233] p-5'>Explain the construction waste disposal regulations in the UAE.</p>
+                                <p className='mb-2'>Select Country:</p>
+                                <div className='flex'>
+                                    <p onClick={() => country.length == 0 && sendCountryQuery("India")} className={country == "India" ? "bg-[#37AD4A] px-5 py-3 text-[14px] text-white mr-2" : 'px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'} > India</p>
+                                    <p onClick={() => country.length == 0 && sendCountryQuery("UAE")} className={country == "UAE" ? "bg-[#37AD4A] px-5 py-3 text-[14px] text-white mr-2" : 'px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'}>UAE</p>
+                                </div>
                             </div>
                         </div>
 
-                    </div> : <div className='flex flex-col h-[calc(93vh-140px)] justify-start overflow-auto pt-4'>
-
-                        <div className='flex items-start justify-start mb-4'>
+                        {/* <div className='flex items-start justify-start mb-4'>
                             <Image src="/question.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                             <p className=' font-semibold text-[16px] text-[#143F8D]'>Offset required from 33 KV electric line?</p>
-                        </div>
+                        </div> */}
 
-                        <div className='flex items-start justify-start'>
+                        {country.length > 0 && <div className='flex items-start justify-start mb-8'>
                             <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                             <div className=''>
-                                <p className=' font-normal text-[16px] text-black mb-5'>The offset required from a 33 KV electric line is 2 meters (2 + 0.3 m for every additional 33,000 volts or part thereof).</p>
+                                <p className='font-normal text-[16px] text-black mb-20'>{countryChat}</p>
 
-                                <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
-
-                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p>
-
+                                {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
                                 <div className='text-[#868686] text-[14px] text-center'>
                                     <p>© 2023 BuildSuite. All Rights Reserved.</p>
 
@@ -105,13 +199,61 @@ export default function Home() {
                                 </div>
                             </div>
 
-                        </div>
+                        </div>}
+
+                        {place.length > 0 && <div className='flex items-start justify-start mb-8'>
+                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                            <div className=''>
+                                <p className='font-normal text-[16px] text-black mb-20'>{placeChat}</p>
+
+                                {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
+                                <div className='text-[#868686] text-[14px] text-center'>
+                                    <p>© 2023 BuildSuite. All Rights Reserved.</p>
+
+                                    <div className='flex items-center justify-between'>
+                                        <p>Home Page</p>
+                                        <p>Terms of Use</p>
+                                        <p>Privacy Policy</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>}
+
+
+                        {chats.map((data: Chat) => {
+                            return <div>
+                                <div className='flex items-start justify-start mb-4'>
+                                    <Image src="/question.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                                    <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query}</p>
+                                </div>
+
+                                <div className='flex items-start justify-start mb-8'>
+                                    <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                                    <div className=''>
+                                        <p className='font-normal text-[16px] text-black mb-20'>{data.answer}</p>
+
+                                        {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
+                                        <div className='text-[#868686] text-[14px] text-center'>
+                                            <p>© 2023 BuildSuite. All Rights Reserved.</p>
+
+                                            <div className='flex items-center justify-between'>
+                                                <p>Home Page</p>
+                                                <p>Terms of Use</p>
+                                                <p>Privacy Policy</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        })}
+
+
 
                     </div>
-
-
-                    }
-
                     <div className='h-[140px] text-[#868686] font-bold'></div>
                 </div>
 
@@ -119,10 +261,10 @@ export default function Home() {
                 <div className=' bg-[#143F8D] absolute bottom-0 left-0 w-screen p-3'>
                     <div className='bg-[#30569C] rounded-md w-full py-2 pl-4 pr-2 flex items-center justify-between mb-2'>
 
-                        <textarea rows={1} value={query} onChange={(evt) => handleTextareaChange(evt)} placeholder="Ask your question here." className="text-white max-h-40 border-none outline-none w-[85%] bg-transparent text-[16px]" />
+                        <textarea disabled={country.length == 0 || disabled} rows={1} value={query} onChange={(evt) => handleTextareaChange(evt)} placeholder="Ask your question here." className="text-white max-h-40 border-none outline-none w-[85%] bg-transparent text-[16px]" />
 
 
-                        <button onClick={() => sendQuery()} className={query.length == 0 ? '' : 'bg-[#37AD4A] rounded-sm self-end'}>
+                        <button onClick={() => place.length > 0 ? sendQuery() : sendPlaceQuery()} className={query.length == 0 ? '' : 'bg-[#37AD4A] rounded-sm self-end'}>
                             <Image src="/send.svg" alt='Send Image' width={20} height={20} className=' p-2 h-[35px] w-[35px]' />
                         </button>
                     </div>
