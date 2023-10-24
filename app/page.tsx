@@ -35,7 +35,7 @@ export default function Login() {
       <Image src="/3d-logo.png" alt="Logo Image" width={100} height={100} className=" w-[270px]" />
       <p className="text-center font-medium text-[20px] w-[300px] mb-5">Your AI companion to answer your construction related queries..</p>
       {/* <Link href="/home"> */}
-      <button onClick={() => signIn()} className=" bg-[#37AD4A] w-[300px] h-[48px] rounded-[2px] p-3 my-3">Continue with Email</button>
+      <button onClick={() => signIn("google")} className=" bg-[#37AD4A] w-[300px] h-[48px] rounded-[2px] p-3 my-3">Continue with Email</button>
       {/* </Link> */}
 
       <Link href="/home">
