@@ -34,13 +34,14 @@ export default function Login() {
       <p className=" font-medium text-[32px]">Hello, I&apos;m PARK</p>
       <Image src="/3d-logo.png" alt="Logo Image" width={100} height={100} className=" w-[270px]" />
       <p className="text-center font-medium text-[20px] w-[300px] mb-5">Your AI companion to answer your construction related queries..</p>
-      {/* <Link href="/home"> */}
-      <button onClick={() => signIn("google")} className=" bg-[#37AD4A] w-[300px] h-[48px] rounded-[2px] p-3 my-3">Continue with Email</button>
-      {/* </Link> */}
+      <button onClick={() => signIn("google")} className=" bg-white text-black w-[300px] h-[48px] rounded-[2px] p-3 mt-3 mb-20 flex items-center justify-center">
+        <img src="https://seeklogo.com/images/G/google-logo-28FA7991AF-seeklogo.com.png" alt="Logo Image" width={100} height={100} className="w-[25px] mr-4" />
+        <p>Continue with Google</p>
+      </button>
 
-      <Link href="/home">
+      {/* <Link href="/home">
         <button className=" bg-[#37AD4A] w-[300px] h-[48px] rounded-[2px] p-3 mb-20">Continue with Mobile number</button>
-      </Link>
+      </Link> */}
       <Image src="/logo2.png" alt="Logo Image" width={100} height={100} className=" h-[30px] w-auto mb-5" />
       <div className="w-[180px] flex items-center justify-between">
         <p className="text-[12px] text-[#D6D6D6]">Terms of use</p>
