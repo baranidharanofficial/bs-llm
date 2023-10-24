@@ -10,7 +10,8 @@ const handler = NextAuth({
             clientId: clientId ?? "",
             clientSecret: clientSecret ?? ""
         })
-    ]
+    ],
+    secret: process.env.NEXTAUTH_SECRET
 });
 
 export { handler as GET, handler as POST }
