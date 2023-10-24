@@ -1,7 +1,9 @@
 "use client"
 
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { ChangeEvent, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdMenu, MdClose } from 'react-icons/md';
 
 
@@ -25,6 +27,16 @@ export default function Home() {
     const [showBS, setShowBS] = useState(false);
 
     const [chats, setChats] = useState<Chat[]>([]);
+
+    const { data: session } = useSession();
+    const navigate = useRouter();
+
+
+    useEffect(() => {
+        if (!session?.user) {
+            navigate.push('/');
+        }
+    }, [session])
 
     const scrollToBottom = () => {
         if (divRef.current) {
@@ -129,10 +141,12 @@ export default function Home() {
                         <MdClose onClick={() => showSideNav(false)} className="text-[24px] text-white"></MdClose>
                     </div>
 
+                    <p className="text-white cursor-pointer ml-2 my-4">Hi {session?.user?.name?.split(" ")[0]}</p>
+
                     <p className="text-white font-bold cursor-pointer ml-2 my-4">BUY CREDITS</p>
                     <p className="text-white font-bold cursor-pointer ml-2 my-4">WHAT IS BUILDSUITE</p>
                     <p className="text-white font-bold cursor-pointer ml-2 my-4">CONTACT US</p>
-                    <p className="text-white font-bold cursor-pointer ml-2 my-4">SIGN OUT</p>
+                    <p onClick={() => signOut()} className="text-white font-bold cursor-pointer ml-2 my-4">SIGN OUT</p>
                 </div>
                 <div className="cursor-pointer w-full py-2 text-center rounded-md shadow-sm outline-none bg-[#37AD4A] text-white text-[14px]">
                     3/5 Credits Remaining
@@ -172,7 +186,7 @@ export default function Home() {
 
                 <div className='h-[7%] bg-[#143F8D] px-3 flex items-center justify-between'>
                     <img alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className=' h-[3vh] w-auto' />
-                    <p onClick={() => setShowBS(true)} className=' text-white text-[12px]'>KNOW MORE</p>
+                    <p onClick={() => setShowBS(true)} className=' text-white text-[12px]'>KNOW MORE </p>
                 </div>
 
                 <nav className="h-[7%] w-full bg-white shadow-md flex items-center justify-between max-lg:px-[3vw]">
@@ -189,7 +203,7 @@ export default function Home() {
                             3/5 Credits Remaining
                         </div>
                         <p className="mr-8 text-[#53D878] cursor-pointer">Purchase Credits</p>
-                        <p className="cursor-pointer">Sign out</p>
+                        <p className="cursor-pointer" onClick={() => signOut()}>Sign out</p>
                     </div>
                 </nav>
 

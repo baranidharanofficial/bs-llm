@@ -1,15 +1,43 @@
+"use client"
+
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Login() {
+
+  const { data: session } = useSession();
+  const navigate = useRouter();
+
+
+  useEffect(() => {
+    if (session?.user) {
+      navigate.push('/home');
+    }
+  }, [session])
+
+
+  function onSuccess(res: any) {
+    console.log(res.profileObj);
+  }
+
+  function onFailure(res: any) {
+    console.log(res);
+  }
+
+
+
   return (
     <div className="h-screen w-screen bg-[#143F8D] flex flex-col items-center justify-center overflow-hidden">
       <p className=" font-medium text-[32px]">Hello, I&apos;m PARK</p>
       <Image src="/3d-logo.png" alt="Logo Image" width={100} height={100} className=" w-[270px]" />
       <p className="text-center font-medium text-[20px] w-[300px] mb-5">Your AI companion to answer your construction related queries..</p>
-      <Link href="/home">
-        <button className=" bg-[#37AD4A] w-[300px] h-[48px] rounded-[2px] p-3 my-3">Continue with Email</button>
-      </Link>
+      {/* <Link href="/home"> */}
+      <button onClick={() => signIn()} className=" bg-[#37AD4A] w-[300px] h-[48px] rounded-[2px] p-3 my-3">Continue with Email</button>
+      {/* </Link> */}
+
       <Link href="/home">
         <button className=" bg-[#37AD4A] w-[300px] h-[48px] rounded-[2px] p-3 mb-20">Continue with Mobile number</button>
       </Link>

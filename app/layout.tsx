@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 import Head from 'next/head'
+import Providers from './Providers'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
@@ -20,7 +21,11 @@ export default function RootLayout({
       <Head>
         <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
-      <body className={montserrat.className}>{children}</body>
+      <body className={montserrat.className}>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
     </html>
   )
 }
