@@ -25,6 +25,7 @@ export default function Home() {
     const [disabled, setDisabled] = useState(false);
     const divRef = useRef<HTMLDivElement | null>(null);
     const [showBS, setShowBS] = useState(false);
+    const [showFeedback, setShowFeedback] = useState(false);
 
     const [chats, setChats] = useState<Chat[]>([]);
 
@@ -60,7 +61,7 @@ export default function Home() {
     }
 
     function typeWriter(i: number, txt: string) {
-        var speed = 40;
+        var speed = 30;
 
         if (i < txt.length) {
             setDisabled(true);
@@ -85,7 +86,7 @@ export default function Home() {
     }
 
     function typeWriter2(i: number, txt: string) {
-        var speed = 40;
+        var speed = 30;
 
         if (i < txt.length) {
             setDisabled(true);
@@ -132,13 +133,13 @@ export default function Home() {
 
 
     return (
-        <main className="overflow-hidden flex h-[100dvh] w-screen flex-col items-center bg-gray-50 text-black">
+        <main className="h-[100vh] w-[100vw] bg-gray-50 text-black flex flex-col items-center overflow-hidden">
 
-            <div className={sideNav ? "w-[250px] z-10 slide-in absolute right-0 top-0 h-screen bg-[#143F8D] shadow-2xl p-4 hidden flex-col justify-between nav-slide max-sm:flex" : "w-[250px] z-10 absolute right-0 top-0 h-screen bg-[#143F8D] shadow-2xl p-4 hidden flex-col justify-between nav-slide2"}>
+            <div className={sideNav ? "w-[250px] translate-x-[0px] duration-300 z-10 fixed right-0 top-0 h-full bg-[#143F8D] shadow-2xl p-4 flex flex-col justify-between" : "w-[250px] translate-x-[250px] duration-300 z-10 fixed right-0 top-0 h-full bg-[#143F8D] shadow-2xl p-4 flex-col justify-between flex"}>
                 <div>
                     <div className='flex items-center justify-between w-full mb-10'>
                         <Image alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className=' h-[25px] w-auto' />
-                        <MdClose onClick={() => showSideNav(false)} className="text-[24px] text-white"></MdClose>
+                        <MdClose onClick={() => showSideNav(false)} className="text-[24px] cursor-pointer text-white"></MdClose>
                     </div>
 
                     <p className="text-white cursor-pointer ml-2 my-4">Hi {session?.user?.name?.split(" ")[0]}</p>
@@ -153,61 +154,70 @@ export default function Home() {
                 </div>
             </div>
 
-            {showBS && <div className='absolute top-0 left-0 w-[100vw] h-[100dvh] pt-6 pb-20 px-6 bg-[#143F8D] flex flex-col items-center justify-between'>
 
-                <div>
-                    <div onClick={() => setShowBS(false)} className="w-full text-[36px] text-white text-xl flex justify-end">
-                        <MdClose></MdClose>
+            {showFeedback && <div className='absolute z-50 top-0 left-0 w-[100vw] h-[100dvh] pt-6 pb-20 px-6 bg-[#143e8d53] flex items-center justify-center'>
+                <div className='bg-white w-[30%] max-sm:w-[90%] rounded-sm p-5'>
+
+                    <div className='flex items-center justify-between mb-4'>
+                        <p className='font-semibold text-[18px]'>Send feedback</p>
+                        <MdClose onClick={() => setShowFeedback(false)} className="text-[24px]"></MdClose>
                     </div>
 
+                    <textarea rows={2} value={query} onChange={(evt) => handleTextareaChange(evt)} placeholder="Ask your question here." className="text-black bg-slate-200 h-30 max-h-40 p-2 border-none outline-none w-full bg-transparent text-[14px] mb-4" />
 
-                    <img alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className=' self-start h-[6vh] w-auto mt-6' />
-
-                    <div className='text-[#37AD4A] font-semibold text-[24px] ml-2 mt-5'>
-                        <p>WORLD&apos;S FIRST AI POWERED CONSTRUCTION MANAGEMENT PLATFORM</p>
-                    </div>
+                    <button className='bg-[#37AD4A] w-full p-2 rounded-sm text-[14px] font-semibold text-white'>Submit</button>
                 </div>
-
-
-                <div className='w-[93%] text-center'>
-                    <button className='w-full text-[16px] bg-[#37AD4A] text-white font-semibold py-2 rounded-sm justify-end'>
-                        ASK FOR DEMO
-                    </button>
-                    <button className='mt-5 text-[#37AD4A] font-semibold'>
-                        VISIT WEBSITE
-                    </button>
-                </div>
-
-
             </div>}
 
+            {
+                showBS && <div className='absolute z-50 top-0 left-0 w-[100vw] h-[100dvh] pt-6 pb-20 px-6 bg-[#143F8D] flex flex-col items-center justify-between'>
 
-            <div className="w-[1200px] max-xl:w-[1000px] max-lg:w-full h-full flex flex-col justify-start">
+                    <div>
+                        <div onClick={() => setShowBS(false)} className="w-full text-[36px] text-white text-xl flex justify-end">
+                            <MdClose></MdClose>
+                        </div>
 
-                <div className='h-[7%] bg-[#143F8D] px-3 flex items-center justify-between'>
-                    <img alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className=' h-[3vh] w-auto' />
-                    <p onClick={() => setShowBS(true)} className=' text-white text-[12px]'>KNOW MORE </p>
-                </div>
 
-                <nav className="h-[7%] w-full bg-white shadow-md flex items-center justify-between max-lg:px-[3vw]">
-                    <Image alt='BuildSuite Logo' src={"/logo3.png"} width={40} height={40} className=' h-[5vh] w-auto' />
+                        <img alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className=' self-start h-[6vh] w-auto mt-6' />
 
-                    <div className='max-sm:flex items-center justify-end hidden'>
-                        <p className='mr-4 bg-[#37AD4A] text-white text-[12px] rounded-full px-3 py-1'>0/10 Credits</p>
-                        <MdMenu onClick={() => showSideNav(true)} className="max-sm:block text-[28px] text-slate-800 hidden" ></MdMenu>
+                        <div className='text-[#37AD4A] font-semibold text-[24px] ml-2 mt-5'>
+                            <p>WORLD&apos;S FIRST AI POWERED CONSTRUCTION MANAGEMENT PLATFORM</p>
+                        </div>
                     </div>
 
 
-                    <div className="flex items-center max-sm:hidden">
-                        <div className="cursor-pointer px-5 py-2 rounded-md shadow-sm outline-none border-[1px] border-[#53D878] text-[#53D878] text-[14px] hover:bg-[#53D878] hover:text-white mr-8">
-                            3/5 Credits Remaining
-                        </div>
-                        <p className="mr-8 text-[#53D878] cursor-pointer">Purchase Credits</p>
-                        <p className="cursor-pointer" onClick={() => signOut()}>Sign out</p>
+                    <div className='w-[93%] text-center'>
+                        <button className='w-full text-[16px] bg-[#37AD4A] text-white font-semibold py-2 rounded-sm justify-end'>
+                            ASK FOR DEMO
+                        </button>
+                        <button className='mt-5 text-[#37AD4A] font-semibold'>
+                            VISIT WEBSITE
+                        </button>
+                    </div>
+
+
+                </div>
+            }
+
+            <div className='h-[5%] bg-[#143F8D] w-full px-3 flex items-center cursor-pointer justify-between'>
+                <img alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className='h-[3vh]  w-auto' />
+                <p onClick={() => setShowBS(true)} className='text-white text-[12px]'>KNOW MORE </p>
+            </div>
+
+
+            <div className="w-[1200px] h-[95%] max-xl:w-[1000px] max-lg:w-full flex flex-col justify-start">
+
+
+                <nav className="h-[7%] w-full max-sm:shadow-md flex items-center justify-between max-lg:px-[3vw] px-3">
+                    <Image alt='BuildSuite Logo' src={"/logo3.png"} width={40} height={40} className=' h-[5vh] w-auto' />
+
+                    <div className='flex items-center justify-end '>
+                        <p className='mr-4 bg-[#37AD4A] text-white text-[12px] rounded-full px-3 py-1'>0/10 Credits</p>
+                        <MdMenu onClick={() => showSideNav(true)} className="text-[28px] cursor-pointer text-slate-800" ></MdMenu>
                     </div>
                 </nav>
 
-                <div ref={divRef} className="h-[66%] flex flex-col smooth-scroll overflow-x-hidden overflow-y-auto px-3">
+                <div ref={divRef} className="h-[72%] flex flex-col smooth-scroll overflow-x-hidden overflow-y-auto px-3">
 
                     <div className='flex items-start justify-start mt-2 mb-8'>
                         <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
@@ -218,8 +228,8 @@ export default function Home() {
 
                             <p className='mb-2'>Select Country:</p>
                             <div className='flex'>
-                                <p onClick={() => country.length == 0 && sendCountryQuery("India")} className={country == "India" ? "bg-[#37AD4A] px-5 py-3 text-[14px] text-white mr-2" : 'px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'} > India</p>
-                                <p onClick={() => country.length == 0 && sendCountryQuery("UAE")} className={country == "UAE" ? "bg-[#37AD4A] px-5 py-3 text-[14px] text-white mr-2" : 'px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'}>UAE</p>
+                                <p onClick={() => country.length == 0 && sendCountryQuery("India")} className={country == "India" ? "bg-[#37AD4A] cursor-pointer px-5 py-3 text-[14px] text-white mr-2" : 'cursor-pointer px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'} > India</p>
+                                <p onClick={() => country.length == 0 && sendCountryQuery("UAE")} className={country == "UAE" ? "bg-[#37AD4A] px-5 py-3 text-[14px] cursor-pointer text-white mr-2" : 'cursor-pointer px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'}>UAE</p>
                             </div>
                         </div>
                     </div>
@@ -265,6 +275,10 @@ export default function Home() {
                                 <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                 <div className=''>
                                     <p className='font-normal text-[16px] text-black'>{data.answer}</p>
+                                    <br></br>
+
+
+                                    <i onClick={() => setShowFeedback(true)} className=' underline text-[12px] cursor-pointer text-[#143F8D]'>Send feedback</i>
 
                                     {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
                                 <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
@@ -286,14 +300,14 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className='h-[20%] bg-[#143F8D] w-screen px-2 py-3 '>
-                    <div className='bg-[#30569C] rounded-md w-full py-2 pl-4 pr-2 flex items-center justify-between mb-2'>
-                        <textarea disabled={country.length == 0 || disabled} rows={1} value={query} onChange={(evt) => handleTextareaChange(evt)} placeholder="Ask your question here." className="text-white max-h-40 border-none outline-none w-[85%] bg-transparent text-[16px]" />
-                        <button onClick={() => place.length > 0 ? sendQuery() : sendPlaceQuery()} className={query.length == 0 ? '' : 'bg-[#37AD4A] rounded-sm self-end'}>
+                <div className='max-h-[300px] fixed bottom-0 max-sm:bg-[#143F8D] bg-slate-100 w-screen max-w-[1200px] rounded-md max-sm:rounded-none px-4 py-4 max-sm:px-2 max-sm:py-3 '>
+                    <div className='bg-slate-200 max-sm:bg-[#30569C] rounded-md w-full py-2 pl-4 pr-2 flex items-center justify-between mb-2'>
+                        <textarea disabled={country.length == 0 || disabled} rows={1} value={query} onChange={(evt) => handleTextareaChange(evt)} placeholder="Ask your question here." className="text-black max-sm:text-white h-6 max-h-40 border-none outline-none w-[85%] bg-transparent text-[16px]" />
+                        <button onClick={() => place.length > 0 ? sendQuery() : sendPlaceQuery()} className={query.length == 0 ? 'max-sm:bg-transparent bg-slate-800 rounded-sm' : 'bg-[#37AD4A] rounded-sm self-end'}>
                             <Image src="/send.svg" alt='Send Image' width={20} height={20} className=' p-2 h-[35px] w-[35px]' />
                         </button>
                     </div>
-                    <p className='text-[#D6D6D6] text-[12px] font-medium text-center'>Currently in beta testing. Your feedback is invaluable for enhancing our service. Please report errors or share suggestions.</p>
+                    <p className='text-[#37AD4A] max-sm:text-white text-[12px] font-medium text-center'>Currently in beta testing. Your feedback is invaluable for enhancing our service. Please report errors or share suggestions.</p>
                 </div>
             </div>
 
