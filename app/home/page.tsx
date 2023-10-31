@@ -10,12 +10,19 @@ import { constants } from '../constants/constants';
 
 interface Chat {
     query: string;
-    answer: string;
+    answer?: ChatResponse;
 }
 
 interface Model {
     model_id: string;
     model_name: string;
+}
+
+interface ChatResponse {
+    msg: string;
+    query_id: string;
+    response: string;
+    session_id: string
 }
 
 
@@ -27,6 +34,7 @@ export default function Home() {
     const [place, setPlace] = useState("");
     const [showChat, setShowChat] = useState(false);
     const [query, setQuery] = useState("");
+    const [currentResponse, setCurrentResponse] = useState<ChatResponse>();
     const [queryID, setQueryID] = useState("");
     const [feedback, setFeedback] = useState("");
     const [countryChat, setCountryChat] = useState("");
@@ -144,24 +152,30 @@ export default function Home() {
 
 
     const sendQuery = async (evt: any) => {
-        evt.preventDefault();
-        await getResponse();
+        if (query.length > 0) {
+            evt.preventDefault();
+            await getResponse();
 
-        let cChat: Chat = {
-            query: query,
-            answer: "Sorry I'm still in development process. Come back after some time."
+            let cChat: Chat = {
+                query: query,
+                answer: currentResponse
+            }
+
+            setChats([...chats, cChat]);
+
+            setTimeout(() => scrollToBottom(), 500);
+            setQuery("");
+        } else {
+            alert("Enter your query");
         }
 
-        setChats([...chats, cChat]);
-
-        setTimeout(() => scrollToBottom(), 500);
-        setQuery("");
     }
 
     const getResponse = async () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", localStorage.getItem("token") ?? "");
+        myHeaders.append("Cache-Control", "no-cache");
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token") ?? "");
 
         const raw = JSON.stringify({
             "email": session?.user.email,
@@ -180,7 +194,7 @@ export default function Home() {
             .then((response: Response) => response.text())
             .then((result: string) => {
                 console.log(JSON.parse(result));
-                setModels(JSON.parse(result));
+                setCurrentResponse(JSON.parse(result));
             })
             .catch((error: any) => console.log('error', error));
     }
@@ -188,7 +202,7 @@ export default function Home() {
     const addFeedback = async () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", localStorage.getItem("token") ?? "");
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token") ?? "");
 
         const raw = JSON.stringify({
             "email": session?.user.email,
@@ -207,7 +221,7 @@ export default function Home() {
             .then((response: Response) => response.text())
             .then((result: string) => {
                 console.log(JSON.parse(result));
-                setModels(JSON.parse(result));
+                setShowFeedback(false);
             })
             .catch((error: any) => console.log('error', error));
     }
@@ -288,7 +302,7 @@ export default function Home() {
 
                     <textarea rows={2} value={query} onChange={(evt) => handleTextareaChange(evt)} placeholder="Ask your question here." className="text-black bg-slate-200 h-30 max-h-40 p-2 border-none outline-none w-full bg-transparent text-[14px] mb-4" />
 
-                    <button className='bg-[#37AD4A] w-full p-2 rounded-sm text-[14px] font-semibold text-white'>Submit</button>
+                    <button onClick={() => addFeedback()} className='bg-[#37AD4A] w-full p-2 rounded-sm text-[14px] font-semibold text-white'>Submit</button>
                 </div>
             </div>}
 
@@ -404,7 +418,7 @@ export default function Home() {
                             <div className='flex items-start justify-start mb-8'>
                                 <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                 <div className=''>
-                                    <p className='font-normal text-[16px] text-black'>{data.answer}</p>
+                                    <p className='font-normal text-[16px] text-black'>{data.answer?.response ?? "Please hang on we're fixing it 🔧🚀."}</p>
                                     <br></br>
 
                                     <div className='flex items-center justify-start'>
