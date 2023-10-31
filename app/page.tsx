@@ -2,9 +2,9 @@
 
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { constants } from "./constants/constants";
 
 export default function Login() {
 
@@ -13,19 +13,43 @@ export default function Login() {
 
 
   useEffect(() => {
-    if (session?.user) {
+    if (session?.user && localStorage.getItem("token") == null && localStorage.getItem("token") == undefined) {
+
+      const login = async () => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+          "email": session.user?.email,
+          "uid": session.user?.id,
+          "profile_pic": session.user?.image,
+          "name": session.user?.name,
+        });
+
+        console.log(raw);
+
+        const requestOptions: RequestInit = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow',
+        };
+
+        await fetch(`${constants.BASE_URL}login`, requestOptions)
+          .then((response: Response) => response.text())
+          .then((result: string) => {
+            console.log(result);
+            localStorage.setItem("token", JSON.parse(result)['JWT']);
+            navigate.push('/home');
+          })
+          .catch((error: any) => console.log('error', error));
+      }
+
+      login();
+    } else if (session?.user) {
       navigate.push('/home');
     }
-  }, [session])
-
-
-  function onSuccess(res: any) {
-    console.log(res.profileObj);
-  }
-
-  function onFailure(res: any) {
-    console.log(res);
-  }
+  }, [session]);
 
 
 
