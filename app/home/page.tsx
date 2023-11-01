@@ -10,7 +10,8 @@ import { constants } from '../constants/constants';
 
 interface Chat {
     query: string;
-    answer?: ChatResponse;
+    answer?: ChatResponse | null;
+    isLiked: boolean | null;
 }
 
 interface Model {
@@ -40,9 +41,11 @@ export default function Home() {
     const [countryChat, setCountryChat] = useState("");
     const [placeChat, setPlaceChat] = useState("");
     const [disabled, setDisabled] = useState(false);
+    const [loader, setLoader] = useState(false);
+    const [mainLoader, setMainLoader] = useState(false);
     const divRef = useRef<HTMLDivElement | null>(null);
     const [showBS, setShowBS] = useState(false);
-    const [showFeedback, setShowFeedback] = useState(false);
+    const [showFeedbackID, setShowFeedbackID] = useState("");
 
     const [chats, setChats] = useState<Chat[]>([]);
 
@@ -54,29 +57,63 @@ export default function Home() {
 
 
     useEffect(() => {
-        const getModels = async () => {
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
+        if (session?.user) {
+            const getModels = async () => {
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
 
-            const raw = JSON.stringify({});
+                const raw = JSON.stringify({});
 
-            const requestOptions: RequestInit = {
-                method: 'POST',
-                headers: myHeaders,
-                body: raw,
-                redirect: 'follow',
-            };
+                const requestOptions: RequestInit = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow',
+                };
 
-            await fetch(`${constants.BASE_URL}fetch_models`, requestOptions)
-                .then((response: Response) => response.text())
-                .then((result: string) => {
-                    console.log(JSON.parse(result));
-                    setModels(JSON.parse(result));
-                })
-                .catch((error: any) => console.log('error', error));
+                await fetch(`${constants.BASE_URL}fetch_models`, requestOptions)
+                    .then((response: Response) => response.text())
+                    .then((result: string) => {
+                        console.log(JSON.parse(result));
+                        setModels(JSON.parse(result));
+                    })
+                    .catch((error: any) => console.log('error', error));
+            }
+            getModels();
+            // getProfile();
         }
-        getModels();
-    }, [])
+
+    }, [session]);
+
+
+
+    const getProfile = async () => {
+        console.log(session?.user.email);
+        const token = localStorage.getItem("token");
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", `Bearer ${token}`);
+
+        const raw = JSON.stringify({
+            "email": session?.user.email,
+        }
+        );
+
+        const requestOptions: RequestInit = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow',
+        };
+
+        await fetch(`${constants.BASE_URL}profile`, requestOptions)
+            .then((response: Response) => response.text())
+            .then((result: string) => {
+                console.log(JSON.parse(result));
+                setShowFeedbackID("");
+            })
+            .catch((error: any) => console.log('error', error));
+    }
 
 
 
@@ -153,29 +190,49 @@ export default function Home() {
 
     const sendQuery = async (evt: any) => {
         if (query.length > 0) {
+            setDisabled(true);
+            setLoader(true);
             evt.preventDefault();
-            await getResponse();
 
             let cChat: Chat = {
                 query: query,
-                answer: currentResponse
+                answer: null,
+                isLiked: null,
             }
-
             setChats([...chats, cChat]);
-
             setTimeout(() => scrollToBottom(), 500);
             setQuery("");
+            await getResponse();
+            setDisabled(false);
+            setLoader(false);
         } else {
             alert("Enter your query");
         }
-
     }
+
+
+    useEffect(() => {
+        if (currentResponse) {
+            chats.forEach((data, index) => {
+                if (index == (chats.length - 1)) {
+                    data.answer = currentResponse;
+                }
+            });
+
+            setChats([...chats]);
+            console.log(chats);
+
+            setTimeout(() => scrollToBottom(), 500);
+
+        }
+
+    }, [currentResponse])
 
     const getResponse = async () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Cache-Control", "no-cache");
-        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token") ?? "");
+        myHeaders.append("Authorization", `Bearer ${localStorage.getItem("token")}`);
 
         const raw = JSON.stringify({
             "email": session?.user.email,
@@ -191,7 +248,12 @@ export default function Home() {
         };
 
         await fetch(`${constants.BASE_URL}create_query`, requestOptions)
-            .then((response: Response) => response.text())
+            .then(async (response: Response) => {
+                if (response.status == 401) {
+                    await logout();
+                }
+                return response.text();
+            })
             .then((result: string) => {
                 console.log(JSON.parse(result));
                 setCurrentResponse(JSON.parse(result));
@@ -199,15 +261,17 @@ export default function Home() {
             .catch((error: any) => console.log('error', error));
     }
 
-    const addFeedback = async () => {
+    const addFeedback = async (isLiked: boolean | null, cqueryID: string) => {
+        setMainLoader(true);
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token") ?? "");
 
         const raw = JSON.stringify({
             "email": session?.user.email,
-            "query_id": queryID,
-            "feedback": feedback,
+            "query_id": cqueryID,
+            "feedback": isLiked == null ? "" : isLiked ? "GOOD" : "BAD",
+            "feedback_comment": feedback
         });
 
         const requestOptions: RequestInit = {
@@ -221,7 +285,8 @@ export default function Home() {
             .then((response: Response) => response.text())
             .then((result: string) => {
                 console.log(JSON.parse(result));
-                setShowFeedback(false);
+                setShowFeedbackID("");
+                setMainLoader(false);
             })
             .catch((error: any) => console.log('error', error));
     }
@@ -253,8 +318,21 @@ export default function Home() {
 
     const logout = async () => {
         await signOut();
-        await localStorage.clear();
+        localStorage.clear();
         await chatLogout();
+    }
+
+
+    const addReaction = async (isLiked: boolean, cQueryID: string) => {
+        chats.forEach(data => {
+            if (data.answer?.query_id == cQueryID) {
+                data.isLiked = isLiked;
+            }
+        })
+
+        setChats([...chats]);
+
+        addFeedback(isLiked, cQueryID);
     }
 
 
@@ -292,17 +370,17 @@ export default function Home() {
             </div>
 
 
-            {showFeedback && <div className='absolute z-50 top-0 left-0 w-[100vw] h-[100dvh] pt-6 pb-20 px-6 bg-[#143e8d53] flex items-center justify-center'>
+            {showFeedbackID.length > 0 && <div className='absolute z-50 top-0 left-0 w-[100vw] h-[100dvh] pt-6 pb-20 px-6 bg-[#143e8d53] flex items-center justify-center'>
                 <div className='bg-white w-[30%] max-sm:w-[90%] rounded-sm p-5'>
 
                     <div className='flex items-center justify-between mb-4'>
                         <p className='font-semibold text-[18px]'>Send feedback</p>
-                        <MdClose onClick={() => setShowFeedback(false)} className="text-[24px]"></MdClose>
+                        <MdClose onClick={() => setShowFeedbackID("")} className="text-[24px]"></MdClose>
                     </div>
 
-                    <textarea rows={2} value={query} onChange={(evt) => handleTextareaChange(evt)} placeholder="Ask your question here." className="text-black bg-slate-200 h-30 max-h-40 p-2 border-none outline-none w-full bg-transparent text-[14px] mb-4" />
+                    <textarea rows={2} value={feedback} onChange={(evt) => setFeedback(evt.target.value)} placeholder="Ask your question here." className="text-black bg-slate-200 h-30 max-h-40 p-2 border-none outline-none w-full bg-transparent text-[14px] mb-4" />
 
-                    <button onClick={() => addFeedback()} className='bg-[#37AD4A] w-full p-2 rounded-sm text-[14px] font-semibold text-white'>Submit</button>
+                    <button onClick={() => addFeedback(null, showFeedbackID)} className='bg-[#37AD4A] w-full p-2 rounded-sm text-[14px] font-semibold text-white'>Submit</button>
                 </div>
             </div>}
 
@@ -408,34 +486,68 @@ export default function Home() {
                     </div>}
 
 
-                    {chats.map((data: Chat) => {
-                        return <div key={data.query}>
-                            <div className='flex items-start justify-start mb-4'>
-                                <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                                <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query}</p>
-                            </div>
-
-                            <div className='flex items-start justify-start mb-8'>
-                                <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                                <div className=''>
-                                    <p className='font-normal text-[16px] text-black'>{data.answer?.response ?? "Please hang on we're fixing it 🔧🚀."}</p>
-                                    <br></br>
-
-                                    <div className='flex items-center justify-start'>
-                                        <MdThumbUp className="text-slate-400 mr-2"></MdThumbUp>
-                                        <MdThumbDown className="text-slate-400 mr-4"></MdThumbDown>
-                                        <i onClick={() => setShowFeedback(true)} className=' underline text-[12px] cursor-pointer text-[#143F8D]'>Send feedback</i>
-                                    </div>
-
-
-                                    {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
-                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
-
+                    {chats.map((data: Chat, index) => {
+                        if (chats.length == 1 || index < (chats.length - 1)) {
+                            return <div key={data.query}>
+                                <div className='flex items-start justify-start mb-4'>
+                                    <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                                    <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query + "?"}</p>
                                 </div>
 
+                                <div className='flex items-start justify-start mb-8'>
+                                    <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                                    <div className=''>
+                                        <p className='font-normal text-[16px] text-black'>{data.answer?.response ?? "Park is thinking..."}</p>
+                                        <br></br>
+
+                                        <div className='flex items-center justify-start'>
+                                            <MdThumbUp onClick={() => data.isLiked == null && addReaction(true, data.answer?.query_id ?? "")} className={data.isLiked != null && data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
+                                            <MdThumbDown onClick={() => data.isLiked == null && addReaction(false, data.answer?.query_id ?? "")} className={data.isLiked != null && !data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
+                                            <i onClick={() => setShowFeedbackID(data.answer?.query_id ?? "")} className=' underline text-[12px] cursor-pointer text-[#143F8D]'>Send feedback</i>
+                                        </div>
+
+
+                                        {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
+
+                                    </div>
+
+                                </div>
                             </div>
-                        </div>
+                        }
+
                     })}
+
+
+                    {chats.length > 1 && <div key={chats[chats.length - 1].query}>
+                        <div className='flex items-start justify-start mb-4'>
+                            <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                            <p className=' font-semibold text-[16px] text-[#143F8D]'>{chats[chats.length - 1].query + "?"}</p>
+                        </div>
+
+                        <div className='flex items-start justify-start mb-8'>
+                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                            <div className=''>
+                                {!loader ? <p className='font-normal text-[16px] text-black'>{chats[chats.length - 1].answer?.response ?? "Please hang on we're fixing it 🔧🚀."}</p> :
+                                    <p className='font-normal text-[16px] text-black'>Park is thinking...</p>}
+                                <br></br>
+
+                                <div className='flex items-center justify-start'>
+                                    <MdThumbUp onClick={() => chats[chats.length - 1].isLiked == null && addReaction(true, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
+                                    <MdThumbDown onClick={() => chats[chats.length - 1].isLiked == null && addReaction(false, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && !chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
+                                    <i onClick={() => setShowFeedbackID(chats[chats.length - 1].answer?.query_id ?? "")} className=' underline text-[12px] cursor-pointer text-[#143F8D]'>Send feedback</i>
+                                </div>
+
+
+                                {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
+
+                            </div>
+
+                        </div>
+                    </div>}
+
+
 
 
                 </div>
@@ -449,10 +561,8 @@ export default function Home() {
                             onChange={(evt) => handleTextareaChange(evt)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && e.shiftKey) {
-                                    // Allow Shift+Enter for line break
                                 } else if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault(); // Prevent the default behavior (line break)
-                                    // Trigger the form submission
+                                    e.preventDefault();
                                     place.length > 0 ? sendQuery(e) : sendPlaceQuery(e);
                                 }
                             }}
