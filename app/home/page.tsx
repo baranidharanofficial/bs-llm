@@ -525,7 +525,7 @@ export default function Home() {
                                     <div className=''>
                                         {data.answer?.response != undefined ? <p className='font-normal text-[16px] text-black'>{data.answer?.response}</p>
                                             : loader ? <p className='font-normal text-[16px] text-black'>{textLoader}</p>
-                                                : <p className='font-normal text-[16px] text-black'>"Please hang on we're fixing it 🔧🚀."</p>}
+                                                : <p className='font-normal text-[16px] text-black'>Please hang on we&apos;re fixing it 🔧🚀.</p>}
                                         <br></br>
 
                                         <div className='flex items-center justify-start'>
