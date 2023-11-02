@@ -31,13 +31,14 @@ export default function Home() {
 
     const [sideNav, showSideNav] = useState(false);
     const [country, setCountry] = useState("");
-    const [model, setModel] = useState("");
+    const [model, setModel] = useState("001");
     const [place, setPlace] = useState("");
     const [showChat, setShowChat] = useState(false);
     const [query, setQuery] = useState("");
     const [currentResponse, setCurrentResponse] = useState<ChatResponse>();
     const [queryID, setQueryID] = useState("");
     const [feedback, setFeedback] = useState("");
+    const [currentLike, setCurrentLike] = useState("");
     const [countryChat, setCountryChat] = useState("");
     const [placeChat, setPlaceChat] = useState("");
     const [disabled, setDisabled] = useState(false);
@@ -228,7 +229,7 @@ export default function Home() {
 
         }
 
-    }, [currentResponse, chats])
+    }, [currentResponse])
 
     const getResponse = async () => {
         const myHeaders = new Headers();
@@ -260,19 +261,23 @@ export default function Home() {
                 console.log(JSON.parse(result));
                 setCurrentResponse(JSON.parse(result));
             })
-            .catch((error: any) => console.log('error', error));
+            .catch((error: any) => {
+                console.log('error', error);
+                setLoader(false);
+            });
     }
 
-    const addFeedback = async (isLiked: boolean | null, cqueryID: string) => {
+    const addFeedback = async () => {
         setMainLoader(true);
+        console.log(showFeedbackID);
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token") ?? "");
 
         const raw = JSON.stringify({
             "email": session?.user.email,
-            "query_id": cqueryID,
-            "feedback": isLiked == null ? "" : isLiked ? "GOOD" : "BAD",
+            "query_id": showFeedbackID,
+            "feedback": currentLike,
             "feedback_comment": feedback
         });
 
@@ -334,7 +339,8 @@ export default function Home() {
 
         setChats([...chats]);
 
-        addFeedback(isLiked, cQueryID);
+        setShowFeedbackID(cQueryID);
+        setCurrentLike(isLiked ? 'GOOD' : 'BAD');
     }
 
     const startLoader = () => {
@@ -345,7 +351,7 @@ export default function Home() {
             setTextLoader('Park is typing' + dotString);
             dots = (dots + 1) % 4;
         }
-        setInterval(updateTextLoader, 1000);
+        setInterval(updateTextLoader, 2000);
     }
 
     return (
@@ -392,7 +398,7 @@ export default function Home() {
 
                     <textarea rows={2} value={feedback} onChange={(evt) => setFeedback(evt.target.value)} placeholder="Ask your question here." className="text-black bg-slate-200 h-30 max-h-40 p-2 border-none outline-none w-full bg-transparent text-[14px] mb-4" />
 
-                    <button onClick={() => addFeedback(null, showFeedbackID)} className='bg-[#37AD4A] w-full p-2 rounded-sm text-[14px] font-semibold text-white'>Submit</button>
+                    <button onClick={() => addFeedback()} className='bg-[#37AD4A] w-full p-2 rounded-sm text-[14px] font-semibold text-white'>Submit</button>
                 </div>
             </div>}
 
@@ -463,7 +469,7 @@ export default function Home() {
 
 
 
-                            <p className='mb-2'>Select Country:</p>
+                            {/* <p className='mb-2'>Select Country:</p>
                             <div className='flex'>
 
                                 {
@@ -472,7 +478,7 @@ export default function Home() {
                                     })
                                 }
 
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
@@ -481,34 +487,34 @@ export default function Home() {
                             <p className=' font-semibold text-[16px] text-[#143F8D]'>Offset required from 33 KV electric line?</p>
                         </div> */}
 
-                    {country.length > 0 && <div className='flex items-start justify-start mb-8'>
+                    {/* {country.length > 0 && <div className='flex items-start justify-start mb-8'>
                         <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                         <div className=''>
                             <p className='font-normal text-[16px] text-black'>{countryChat}</p>
 
-                            {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
-                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
+                            <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                            <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p>
 
                         </div>
 
-                    </div>}
+                    </div>} */}
 
-                    {place.length > 0 && <div className='flex items-start justify-start mb-8'>
+                    {/* {place.length > 0 && <div className='flex items-start justify-start mb-8'>
                         <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                         <div className=''>
                             <p className='font-normal text-[16px] text-black'>{placeChat}</p>
 
-                            {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
-                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
+                            <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
+                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p>
 
                         </div>
 
-                    </div>}
+                    </div>} */}
 
 
                     {chats.map((data: Chat, index) => {
                         if (chats.length == 1 || index < (chats.length - 1)) {
-                            return <div key={data.query}>
+                            return <div key={index}>
                                 <div className='flex items-start justify-start mb-4'>
                                     <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query + "?"}</p>
@@ -517,13 +523,14 @@ export default function Home() {
                                 <div className='flex items-start justify-start mb-8'>
                                     <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <div className=''>
-                                        <p className='font-normal text-[16px] text-black'>{data.answer?.response ?? textLoader}</p>
+                                        {data.answer?.response != undefined ? <p className='font-normal text-[16px] text-black'>{data.answer?.response}</p>
+                                            : loader ? <p className='font-normal text-[16px] text-black'>{textLoader}</p>
+                                                : <p className='font-normal text-[16px] text-black'>"Please hang on we're fixing it 🔧🚀."</p>}
                                         <br></br>
 
                                         <div className='flex items-center justify-start'>
-                                            <MdThumbUp onClick={() => data.isLiked == null && addReaction(true, data.answer?.query_id ?? "")} className={data.isLiked != null && data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
-                                            <MdThumbDown onClick={() => data.isLiked == null && addReaction(false, data.answer?.query_id ?? "")} className={data.isLiked != null && !data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
-                                            <i onClick={() => setShowFeedbackID(data.answer?.query_id ?? "")} className=' underline text-[12px] cursor-pointer text-[#143F8D]'>Send feedback</i>
+                                            <MdThumbUp onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(true, data.answer?.query_id ?? "")} className={data.isLiked != null && data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
+                                            <MdThumbDown onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(false, data.answer?.query_id ?? "")} className={data.isLiked != null && !data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
                                         </div>
 
 
@@ -553,9 +560,8 @@ export default function Home() {
                                 <br></br>
 
                                 <div className='flex items-center justify-start'>
-                                    <MdThumbUp onClick={() => chats[chats.length - 1].isLiked == null && addReaction(true, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
-                                    <MdThumbDown onClick={() => chats[chats.length - 1].isLiked == null && addReaction(false, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && !chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
-                                    <i onClick={() => setShowFeedbackID(chats[chats.length - 1].answer?.query_id ?? "")} className=' underline text-[12px] cursor-pointer text-[#143F8D]'>Send feedback</i>
+                                    <MdThumbUp onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(true, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
+                                    <MdThumbDown onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(false, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && !chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
                                 </div>
 
 
@@ -575,7 +581,7 @@ export default function Home() {
                 <div className='max-h-[300px] fixed bottom-0 max-sm:bg-[#143F8D] bg-slate-100 w-[1200px] max-xl:w-[1000px] max-lg:w-full  rounded-md max-sm:rounded-none px-4 py-4 max-sm:px-2 max-sm:py-3 '>
                     <form onSubmit={(evt) => place.length > 0 ? sendQuery(evt) : sendPlaceQuery(evt)} className='bg-slate-200 max-sm:bg-[#30569C] rounded-md w-full py-2 pl-4 pr-2 flex items-center justify-between mb-2'>
                         <textarea
-                            disabled={country.length == 0 || disabled}
+                            disabled={disabled}
                             rows={1}
                             value={query}
                             onChange={(evt) => handleTextareaChange(evt)}
@@ -583,13 +589,18 @@ export default function Home() {
                                 if (e.key === 'Enter' && e.shiftKey) {
                                 } else if (e.key === 'Enter' && !e.shiftKey) {
                                     e.preventDefault();
-                                    place.length > 0 ? sendQuery(e) : sendPlaceQuery(e);
+                                    // place.length > 0 ? sendQuery(e) : sendPlaceQuery(e);
+                                    sendQuery(e);
                                 }
                             }}
                             placeholder="Ask your question here."
                             className="text-black max-sm:text-white h-6 max-h-40 border-none outline-none w-[85%] bg-transparent text-[16px]"
                         />
-                        <button type='submit' onClick={(evt) => place.length > 0 ? sendQuery(evt) : sendPlaceQuery(evt)} className={query.length == 0 ? 'max-sm:bg-transparent bg-slate-800 rounded-sm' : 'bg-[#37AD4A] rounded-sm self-end'}>
+                        {/* <button type='submit' onClick={(evt) => place.length > 0 ? sendQuery(evt) : sendPlaceQuery(evt)} className={query.length == 0 ? 'max-sm:bg-transparent bg-slate-800 rounded-sm' : 'bg-[#37AD4A] rounded-sm self-end'}>
+                            <Image src="/send.svg" alt='Send Image' width={20} height={20} className=' p-2 h-[35px] w-[35px]' />
+                        </button> */}
+
+                        <button type='submit' onClick={(evt) => sendQuery(evt)} className={query.length == 0 ? 'max-sm:bg-transparent bg-slate-800 rounded-sm' : 'bg-[#37AD4A] rounded-sm self-end'}>
                             <Image src="/send.svg" alt='Send Image' width={20} height={20} className=' p-2 h-[35px] w-[35px]' />
                         </button>
                     </form>
