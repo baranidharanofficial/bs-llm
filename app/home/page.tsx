@@ -449,9 +449,17 @@ export default function Home() {
                     <div className='flex items-start justify-start mt-2 mb-8'>
                         <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                         <div>
-                            <p className='text-[#143F8D] font-medium text-[24px] mb-1'>Hello, I&apos;m PARK</p>
-                            <p className='text-[#143F8D] font-medium text-[20px] mb-4'>Your construction rules assistant.</p>
-                            <p className='text-black text-[16px] mb-10'> We&apos;re currently in beta, and we&apos;re here to assist you with building rules and compliance in India and the UAE. Please select your country to get started.</p>
+                            <p className='text-[#143F8D] font-medium text-[24px] mb-1'>Welcome to &apos;Park&apos;</p>
+                            <p className='text-[#143F8D] font-medium text-[20px] mb-4'>Your Construction Companion!</p>
+                            <ul className='list-inside list-disc'>
+                                <li>I am your trusty companion for construction queries, covering building codes, state-specific rules (e.g., Kerala, Karnataka, Delhi NCR), and Indian standards.</li>
+                                <li>As a Beta user, your feedback is crucial in refining me to be more accurate and helpful.</li>
+                                <li>Please keep in mind that I am in Beta, and while I strive for accuracy, my responses may not always be 100% precise.</li>
+                                <li>I encourage you to explore me in a friendly and respectful manner - I'm your trusted construction companion!</li>
+                                <li>Thank you for being a part of our Beta user community, where we work together to create a valuable resource for the construction industry. Let's start exploring now!</li>
+                            </ul>
+                            <br></br>
+                            <p className='text-black text-[16px] mb-6'> We&apos;re currently in beta, and we&apos;re here to assist you with building rules and compliance in India and the UAE. Please select your country to get started.</p>
 
 
 
