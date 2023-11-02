@@ -5,5 +5,5 @@ interface Constants {
 
 
 export let constants: Constants = {
-    BASE_URL: "http://98.70.49.211/"
+    BASE_URL: "https://llm.buildsuite.io/"
 }
