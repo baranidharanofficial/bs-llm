@@ -123,7 +123,7 @@ export default function Home() {
         if (localStorage.getItem("token") == null || localStorage.getItem('token') == undefined) {
             navigate.push('/');
         }
-    }, [session])
+    }, [session, navigate])
 
     const scrollToBottom = () => {
         if (divRef.current) {
@@ -228,7 +228,7 @@ export default function Home() {
 
         }
 
-    }, [currentResponse])
+    }, [currentResponse, chats])
 
     const getResponse = async () => {
         const myHeaders = new Headers();
