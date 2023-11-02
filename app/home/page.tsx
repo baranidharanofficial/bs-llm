@@ -42,6 +42,7 @@ export default function Home() {
     const [placeChat, setPlaceChat] = useState("");
     const [disabled, setDisabled] = useState(false);
     const [loader, setLoader] = useState(false);
+    const [textLoader, setTextLoader] = useState("Park is typing");
     const [mainLoader, setMainLoader] = useState(false);
     const divRef = useRef<HTMLDivElement | null>(null);
     const [showBS, setShowBS] = useState(false);
@@ -57,6 +58,7 @@ export default function Home() {
 
 
     useEffect(() => {
+        startLoader();
         if (session?.user) {
             const getModels = async () => {
                 const myHeaders = new Headers();
@@ -335,6 +337,16 @@ export default function Home() {
         addFeedback(isLiked, cQueryID);
     }
 
+    const startLoader = () => {
+        let dots = 0;
+
+        const updateTextLoader = () => {
+            const dotString = '.'.repeat(dots);
+            setTextLoader('Park is typing' + dotString);
+            dots = (dots + 1) % 4;
+        }
+        setInterval(updateTextLoader, 1000);
+    }
 
     return (
         <main className="h-[100vh] w-[100vw] bg-gray-50 text-black flex flex-col items-center overflow-hidden">
@@ -497,7 +509,7 @@ export default function Home() {
                                 <div className='flex items-start justify-start mb-8'>
                                     <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <div className=''>
-                                        <p className='font-normal text-[16px] text-black'>{data.answer?.response ?? "Park is thinking..."}</p>
+                                        <p className='font-normal text-[16px] text-black'>{data.answer?.response ?? textLoader}</p>
                                         <br></br>
 
                                         <div className='flex items-center justify-start'>
@@ -529,7 +541,7 @@ export default function Home() {
                             <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                             <div className=''>
                                 {!loader ? <p className='font-normal text-[16px] text-black'>{chats[chats.length - 1].answer?.response ?? "Please hang on we're fixing it 🔧🚀."}</p> :
-                                    <p className='font-normal text-[16px] text-black'>Park is thinking...</p>}
+                                    <p className='font-normal text-[16px] text-black'> {textLoader}</p>}
                                 <br></br>
 
                                 <div className='flex items-center justify-start'>
