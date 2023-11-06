@@ -56,9 +56,9 @@ export default function Login() {
   return (
     <div className="h-screen w-screen bg-[#143F8D] flex flex-col items-center justify-center overflow-hidden">
       <p className=" font-medium text-[32px]">Hello, I&apos;m PARK</p>
-      <Image src="/3d-logo.png" alt="Logo Image" width={100} height={100} className=" w-[270px]" />
-      <p className="text-center font-medium text-[20px] w-[300px] mb-5">Your AI companion to answer your construction related queries..</p>
-      <button onClick={() => signIn("google")} className=" bg-white text-black w-[300px] h-[48px] rounded-[2px] p-3 mt-3 mb-20 flex items-center justify-center">
+      <Image src="/3d-logo.png" alt="Logo Image" width={100} height={100} className=" w-[200px]" />
+      <p className="text-center font-medium text-[18px] w-[300px] mb-5">Your AI companion to answer your construction related queries..</p>
+      <button onClick={() => signIn("google")} className="bg-white text-black w-[300px] h-[48px] p-3 mt-3 mb-20 rounded-sm flex items-center justify-center">
         <img src="https://seeklogo.com/images/G/google-logo-28FA7991AF-seeklogo.com.png" alt="Logo Image" width={100} height={100} className="w-[25px] mr-4" />
         <p>Continue with Google</p>
       </button>

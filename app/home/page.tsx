@@ -24,6 +24,7 @@ interface ChatResponse {
     query_id: string;
     response: string;
     session_id: string
+    sources: string[];
 }
 
 
@@ -469,6 +470,7 @@ export default function Home() {
 
 
 
+
                             {/* <p className='mb-2'>Select Country:</p>
                             <div className='flex'>
 
@@ -516,7 +518,7 @@ export default function Home() {
                         if (chats.length == 1 || index < (chats.length - 1)) {
                             return <div key={index}>
                                 <div className='flex items-start justify-start mb-4'>
-                                    <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                                    <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[35px] w-[30px] bg-cover mr-3 rounded-b-sm rounded-t-md' />
                                     <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query + "?"}</p>
                                 </div>
 
@@ -527,6 +529,17 @@ export default function Home() {
                                             : loader ? <p className='font-normal text-[16px] text-black'>{textLoader}</p>
                                                 : <p className='font-normal text-[16px] text-black'>Please hang on we&apos;re fixing it 🔧🚀.</p>}
                                         <br></br>
+
+                                        <i className='text-slate-400 mb-2'>Reference</i>
+                                        <br></br>
+                                        <ol className=' mb-5 list-inside list-decimal text-slate-400'>
+                                            {data.answer?.sources.map((data, index) => {
+                                                return <li key={index} className='mb-1'><i>{data[0]}</i></li>
+                                            })}
+                                        </ol>
+
+
+
 
                                         <div className='flex items-center justify-start'>
                                             <MdThumbUp onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(true, data.answer?.query_id ?? "")} className={data.isLiked != null && data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
@@ -548,16 +561,24 @@ export default function Home() {
 
                     {chats.length > 1 && <div key={chats[chats.length - 1].query}>
                         <div className='flex items-start justify-start mb-4'>
-                            <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                            <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[30px] w-[30px] object-fill rounded-md mr-3' />
                             <p className=' font-semibold text-[16px] text-[#143F8D]'>{chats[chats.length - 1].query + "?"}</p>
                         </div>
 
                         <div className='flex items-start justify-start mb-8'>
-                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] object-cover w-auto mr-3' />
                             <div className=''>
                                 {!loader ? <p className='font-normal text-[16px] text-black'>{chats[chats.length - 1].answer?.response ?? "Please hang on we're fixing it 🔧🚀."}</p> :
                                     <p className='font-normal text-[16px] text-black'> {textLoader}</p>}
                                 <br></br>
+
+                                <i className='text-slate-400 mb-2'>Reference</i>
+                                <br></br>
+                                <ol className=' mb-5 list-inside list-decimal text-slate-400'>
+                                    {chats[chats.length - 1].answer?.sources.map((data, index) => {
+                                        return <li key={index} className='mb-1'><i>{data[0]}</i></li>
+                                    })}
+                                </ol>
 
                                 <div className='flex items-center justify-start'>
                                     <MdThumbUp onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(true, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
