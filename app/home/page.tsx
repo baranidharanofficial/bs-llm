@@ -84,7 +84,7 @@ export default function Home() {
                     .catch((error: any) => console.log('error', error));
             }
             getModels();
-            // getProfile();
+            getProfile();
         }
 
     }, [session]);
@@ -111,10 +111,10 @@ export default function Home() {
         };
 
         await fetch(`${constants.BASE_URL}profile`, requestOptions)
-            .then((response: Response) => response.text())
-            .then((result: string) => {
-                console.log(JSON.parse(result));
-                setShowFeedbackID("");
+            .then((response: Response) => {
+                if (response.status !== 200) {
+                    logout();
+                }
             })
             .catch((error: any) => console.log('error', error));
     }
@@ -530,7 +530,7 @@ export default function Home() {
                                                 : <p className='font-normal text-[16px] text-black'>Please hang on we&apos;re fixing it 🔧🚀.</p>}
                                         <br></br>
 
-                                        <i className='text-slate-400 mb-2'>Reference</i>
+                                        {data.answer?.sources && <i className='text-slate-400 mb-2'>Reference</i>}
                                         <br></br>
                                         <ol className=' mb-5 list-inside list-decimal text-slate-400'>
                                             {data.answer?.sources.map((data, index) => {
@@ -572,8 +572,8 @@ export default function Home() {
                                     <p className='font-normal text-[16px] text-black'> {textLoader}</p>}
                                 <br></br>
 
-                                <i className='text-slate-400 mb-2'>Reference</i>
-                                <br></br>
+                                {chats[chats.length - 1].answer?.sources && <i className='text-slate-400 mb-2'>Reference</i>}
+
                                 <ol className=' mb-5 list-inside list-decimal text-slate-400'>
                                     {chats[chats.length - 1].answer?.sources.map((data, index) => {
                                         return <li key={index} className='mb-1'><i>{data[0]}</i></li>
