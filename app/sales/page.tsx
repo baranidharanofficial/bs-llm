@@ -102,7 +102,7 @@ export default function Login() {
                 <div className=" h-4 w-4 rounded-sm border-[2px] border-slate-400 bg-white mt-2 cursor-pointer">
                 </div>
                 <p className="w-[90%] text-justify">
-                    I understand that 'Park' is in Beta and may make mistakes. I'm willing to help improve the model.
+                    I understand that &apos;Park&apos; is in Beta and may make mistakes. I&apos;m willing to help improve the model.
                 </p>
             </div>
 
