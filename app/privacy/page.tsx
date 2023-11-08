@@ -13,7 +13,7 @@ export default function Privacy() {
             <div className="mx-[15%] overflow-x-hidden py-8">
 
                 <p className="mb-2"><strong>1. Introduction</strong></p>
-                <p className="mb-8">BuildSuite ("we," "our," or "us") is committed to protecting your privacy.
+                <p className="mb-8">BuildSuite (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy.
                     This Privacy Policy explains how we collect, use, disclose, and safeguard your
                     information when you use our website and services. By accessing or using our website
                     or services, you agree to the terms of this Privacy Policy.</p>
