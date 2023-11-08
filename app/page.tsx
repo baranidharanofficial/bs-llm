@@ -40,14 +40,14 @@ export default function Login() {
           .then((result: string) => {
             console.log(result);
             localStorage.setItem("token", JSON.parse(result)['JWT']);
-            navigate.push('/home');
+            navigate.push('/sales');
           })
           .catch((error: any) => console.log('error', error));
       }
 
       login();
     } else if (session?.user) {
-      navigate.push('/home');
+      navigate.push('/sales');
     }
   }, [session]);
 

@@ -65,6 +65,13 @@ textarea {
 }
 
 
+.bgimg {
+  background-image: url("https://cdn.dribbble.com/users/101684/screenshots/1359361/media/d7214f8f3fd4d6798277e18fb3bb5280.png");
+  background-position: bottom;
+  background-size: cover;
+}
+
+
 /* width */
 ::-webkit-scrollbar {
   width: 4px;

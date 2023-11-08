@@ -1,6 +1,3 @@
-import { Session } from "next-auth";
-import { AdapterUser } from "next-auth/adapters";
-import { JWT } from "next-auth/jwt";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 
