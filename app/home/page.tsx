@@ -382,7 +382,7 @@ export default function Home() {
                     <div className='flex items-center justify-between mt-2'>
                         <p>Home Page</p>
                         <p>Terms of Use</p>
-                        <p>Privacy Policy</p>
+                        <a className='cursor-pointer' href="/privacy"><p>Privacy Policy</p></a>
                     </div>
                 </div>
 
