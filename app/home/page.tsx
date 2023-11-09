@@ -230,7 +230,7 @@ export default function Home() {
 
         }
 
-    }, [currentResponse])
+    }, [currentResponse, chats])
 
     const getResponse = async () => {
         const myHeaders = new Headers();

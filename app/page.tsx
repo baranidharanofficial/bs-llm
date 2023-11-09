@@ -49,7 +49,7 @@ export default function Login() {
     } else if (session?.user) {
       navigate.push('/sales');
     }
-  }, [session]);
+  }, [session, navigate]);
 
 
 
