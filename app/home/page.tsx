@@ -214,12 +214,27 @@ export default function Home() {
         }
     }
 
+    function filterUniqueByIndex0(data: any) {
+        const uniqueData = [];
+        const seenValues = new Set();
+
+        for (const item of data) {
+            if (!seenValues.has(item[0])) {
+                uniqueData.push(item);
+                seenValues.add(item[0]);
+            }
+        }
+
+        return uniqueData;
+    }
+
 
     useEffect(() => {
         if (currentResponse) {
             chats.forEach((data, index) => {
                 if (index == (chats.length - 1)) {
                     data.answer = currentResponse;
+                    data.answer.sources = filterUniqueByIndex0(data.answer.sources);
                 }
             });
 
@@ -230,7 +245,7 @@ export default function Home() {
 
         }
 
-    }, [currentResponse, chats])
+    }, [currentResponse])
 
     const getResponse = async () => {
         const myHeaders = new Headers();
@@ -441,7 +456,7 @@ export default function Home() {
 
 
                 <nav className="h-[7%] w-full max-sm:shadow-md flex items-center justify-between max-lg:px-[3vw] px-3">
-                    <Image alt='BuildSuite Logo' src={"/logo3.png"} width={40} height={40} className=' h-[5vh] w-auto' />
+                    <img alt='BuildSuite Logo' src={"/logo3.png"} width={40} height={40} className=' h-[5vh] w-auto' />
 
                     <div className='flex items-center justify-end '>
                         {/* <p className='mr-4 bg-[#37AD4A] text-white text-[12px] rounded-full px-3 py-1'>0 / 10 Credits</p> */}
@@ -481,10 +496,9 @@ export default function Home() {
                                 <div className='flex items-start justify-start mb-8'>
                                     <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <div className=''>
-                                        {
-                                            chats.length > 1 && data.answer?.response != undefined && <div className='font-normal text-[16px] text-black'>{data.answer?.response}</div>}
-                                        {chats.length == 1 && loader ? <p className='font-normal text-[16px] text-black'>{textLoader}</p>
-                                            : <p className='font-normal text-[16px] text-black'>Please hang on we&apos;re fixing it 🔧🚀.</p>
+                                        {loader && chats.length <= 1 && <p className='font-normal text-[16px] text-black'>{textLoader}</p>}
+                                        {data.answer?.response != undefined && <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: data.answer?.response }}></div>}
+                                        {!loader && data.answer?.response == undefined && <p className='font-normal text-[16px] text-black'>Please hang on we&apos;re fixing it 🔧🚀.</p>
                                         }
                                         <br></br>
 
@@ -522,7 +536,7 @@ export default function Home() {
                         <div className='flex items-start justify-start mb-8'>
                             <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] object-cover w-auto mr-3' />
                             <div className=''>
-                                {!loader ? <div className='font-normal text-[16px] text-black'>{chats[chats.length - 1].answer?.response ?? "Please hang on we're fixing it 🔧🚀."}</div> :
+                                {!loader ? <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: chats[chats.length - 1].answer?.response ?? "Please hang on we're fixing it 🔧🚀." }}></div> :
                                     <p className='font-normal text-[16px] text-black'> {textLoader}</p>}
                                 <br></br>
 
