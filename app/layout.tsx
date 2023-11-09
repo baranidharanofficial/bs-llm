@@ -1,7 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
-import Head from 'next/head'
 import Providers from './Providers'
 
 const montserrat = Montserrat({ subsets: ['latin'] })
@@ -9,6 +8,9 @@ const montserrat = Montserrat({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'PARK - Your Construction Companion',
   description: 'Park by BuildSuite - Construction Management Application',
+  openGraph: {
+    images: "https://i.ytimg.com/vi/xJJCN0Xgbig/sddefault.jpg"
+  },
 }
 
 export default function RootLayout({
@@ -18,9 +20,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head>
-        <link rel="shortcut icon" href="/favicon.ico" />
-      </Head>
       <body className={montserrat.className}>
         <Providers>
           {children}
