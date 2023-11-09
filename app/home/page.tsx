@@ -366,11 +366,6 @@ export default function Home() {
                     </div>
 
                     <p className="text-white cursor-pointer ml-2 my-4">Hi {session?.user?.name?.split(" ")[0]}</p>
-                    {/* <div className="cursor-pointer w-full py-2 text-center rounded-md shadow-sm outline-none bg-[#37AD4A] text-white text-[14px]">
-                        0 / 10 Credits Remaining
-                    </div> */}
-
-                    {/* <a className="text-white font-bold cursor-pointer ml-2 my-4">BUY CREDITS</a> */}
                     <p className="text-white font-bold cursor-pointer ml-2 my-4"><a target='_blank' href="https://www.buildsuite.io/">WHAT IS BUILDSUITE</a></p>
                     <p className="text-white font-bold cursor-pointer ml-2 my-4"><a target='_blank' href="https://www.buildsuite.io/contact-us">CONTACT US</a></p>
                     <p onClick={() => logout()} className="text-white font-bold cursor-pointer ml-2 my-4">SIGN OUT</p>
@@ -469,52 +464,10 @@ export default function Home() {
                                 <li>Thank you for being a part of our Beta user community, where we work together to create a valuable resource for the construction industry. Let&apos;s start exploring now!</li>
                             </ul>
                             <br></br>
-
-
-
-
-
-                            {/* <p className='mb-2'>Select Country:</p>
-                            <div className='flex'>
-
-                                {
-                                    models.map((data: Model) => {
-                                        return <p key={data.model_id} onClick={() => { country.length == 0 && sendCountryQuery(data); }} className={country == data.model_name ? "bg-[#37AD4A] cursor-pointer px-5 py-3 text-[14px] text-white mr-2" : 'cursor-pointer px-5 py-3 text-[14px] bg-[#DCF3E0] text-[#248233] mr-2'} >{data.model_name}</p>
-                                    })
-                                }
-
-                            </div> */}
                         </div>
                     </div>
 
-                    {/* <div className='flex items-start justify-start mb-4'>
-                            <Image src="/question.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                            <p className=' font-semibold text-[16px] text-[#143F8D]'>Offset required from 33 KV electric line?</p>
-                        </div> */}
 
-                    {/* {country.length > 0 && <div className='flex items-start justify-start mb-8'>
-                        <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                        <div className=''>
-                            <p className='font-normal text-[16px] text-black'>{countryChat}</p>
-
-                            <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
-                            <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p>
-
-                        </div>
-
-                    </div>} */}
-
-                    {/* {place.length > 0 && <div className='flex items-start justify-start mb-8'>
-                        <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
-                        <div className=''>
-                            <p className='font-normal text-[16px] text-black'>{placeChat}</p>
-
-                            <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
-                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p>
-
-                        </div>
-
-                    </div>} */}
 
 
                     {chats.map((data: Chat, index) => {
@@ -550,10 +503,6 @@ export default function Home() {
                                             <MdThumbUp onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(true, data.answer?.query_id ?? "")} className={data.isLiked != null && data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
                                             <MdThumbDown onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(false, data.answer?.query_id ?? "")} className={data.isLiked != null && !data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
                                         </div>}
-
-
-                                        {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
-                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
 
                                     </div>
 
@@ -591,9 +540,6 @@ export default function Home() {
                                 </div>}
 
 
-                                {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
-                                <p className='mb-[80px] text-[#868686]'><i>Send Feedback</i></p> */}
-
                             </div>
 
                         </div>
@@ -622,9 +568,7 @@ export default function Home() {
                             placeholder="Ask your question here."
                             className="text-black max-sm:text-white h-6 max-h-40 border-none outline-none w-[85%] bg-transparent text-[16px]"
                         />
-                        {/* <button type='submit' onClick={(evt) => place.length > 0 ? sendQuery(evt) : sendPlaceQuery(evt)} className={query.length == 0 ? 'max-sm:bg-transparent bg-slate-800 rounded-sm' : 'bg-[#37AD4A] rounded-sm self-end'}>
-                            <Image src="/send.svg" alt='Send Image' width={20} height={20} className=' p-2 h-[35px] w-[35px]' />
-                        </button> */}
+
 
                         <button type='submit' onClick={(evt) => sendQuery(evt)} className={query.length == 0 ? 'max-sm:bg-transparent bg-slate-800 rounded-sm' : 'bg-[#37AD4A] rounded-sm self-end'}>
                             <Image src="/send.svg" alt='Send Image' width={20} height={20} className=' p-2 h-[35px] w-[35px]' />
@@ -637,54 +581,3 @@ export default function Home() {
         </main >
     )
 }
-
-
-
-{/* <div className="w-[40%] h-full max-lg:h-[10%] max-lg:w-full max-lg:flex-row flex flex-col shadow-md rounded-sm bg-white border-[1px] border-gray-300 p-8 max-lg:p-2">
-
-                        <p className=" max-lg:hidden">Select Country</p>
-
-                        <div className="flex items-center mb-4 max-lg:hidden">
-                            <button className={country == "IND" ? "flex items-center rounded-sm bg-[#53D878] text-white px-6 py-2 my-3 mr-3" : "flex items-center rounded-sm border-[1px] border-gray-400 hover:border-[#53D878] text-[#182139] px-6 py-2 my-3 mr-3"} onClick={() => setCountry("IND")}>
-                                <Image alt='BuildSuite Logo' src={"/ind-flag.jpg"} width={25} height={20} />
-                                <p className='ml-3'>India</p>
-                            </button>
-                            <button className={country == "UAE" ? "flex items-center rounded-sm bg-[#53D878] text-white px-6 py-2 my-3 mr-3" : "flex items-center rounded-sm border-[1px] border-gray-400 hover:border-[#53D878] text-[#182139] px-6 py-2 my-3"} onClick={() => setCountry("UAE")}>
-                                <Image alt='BuildSuite Logo' src={"/uae-flag.png"} width={25} height={20} />
-                                <p className='ml-3'>UAE</p>
-                            </button>
-                        </div>
-
-                        <div className="flex items-center justify-between mb-3 max-lg:hidden">
-                            <p>Query</p>
-                            <p className="text-[#53D878] cursor-pointer text-[12px]">Generate Sample</p>
-                        </div>
-
-                        <textarea rows={12} placeholder="Enter your query" className="p-5 max-lg:hidden rounded-sm text-[16px] outline-none border-[1px] border-gray-400 text-black focus:border-gray-500 mb-5" />
-                        <button className="max-lg:hidden cursor-pointer px-5 py-2 rounded-sm shadow-md outline-none text-[16px] bg-[#53D878] text-white">
-                            Get Quote
-                        </button>
-
-                        <div className="w-full max-lg:flex hidden">
-                            <input type="text" placeholder="Enter your query" className="p-2 w-[80%] max-sm:w-[85%] rounded-sm text-[16px] outline-none border-none text-black focus:border-gray-500" />
-                            <button className=" max-sm:hidden w-[20%] px-5 py-2 rounded-sm shadow-md outline-none text-[14px] bg-[#53D878] text-white">
-                                Get Quote
-                            </button>
-                            <button className="hidden max-sm:flex items-center justify-center w-[15%] rounded-sm shadow-md outline-none text-[24px] bg-[#53D878] text-white">
-                                <MdSend></MdSend>
-                            </button>
-                        </div>
-
-
-                    </div>
-
-
-                    <div className="w-[58%] h-full max-lg:h-[88%] max-lg:w-full flex flex-col shadow-md rounded-sm bg-white border-[1px] border-gray-300 p-8">
-                        <p className="mb-4">Tips</p>
-                        <div className="px-4 bg-slate-50">
-                            <ul className="list-disc p-4 text-[12px]">
-                                <li>To get your answer correct, please ask the query in as much as detail as possible.</li>
-                            </ul>
-                        </div>
-                        {/* <input type="text" className="px-5 py-2 outline-none border-[1px] border-gray-200 text-black text-[14px] hover:bg-blue-700 hover:text-white" /> 
-                    </div> */}
