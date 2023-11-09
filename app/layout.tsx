@@ -7,8 +7,8 @@ import Providers from './Providers'
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'BuildSuite',
-  description: 'Construction Management Application',
+  title: 'PARK - Your Construction Companion',
+  description: 'Park by BuildSuite - Construction Management Application',
 }
 
 export default function RootLayout({

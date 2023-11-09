@@ -366,23 +366,23 @@ export default function Home() {
                     </div>
 
                     <p className="text-white cursor-pointer ml-2 my-4">Hi {session?.user?.name?.split(" ")[0]}</p>
-                    <div className="cursor-pointer w-full py-2 text-center rounded-md shadow-sm outline-none bg-[#37AD4A] text-white text-[14px]">
+                    {/* <div className="cursor-pointer w-full py-2 text-center rounded-md shadow-sm outline-none bg-[#37AD4A] text-white text-[14px]">
                         0 / 10 Credits Remaining
-                    </div>
+                    </div> */}
 
-                    <p className="text-white font-bold cursor-pointer ml-2 my-4">BUY CREDITS</p>
-                    <p className="text-white font-bold cursor-pointer ml-2 my-4">WHAT IS BUILDSUITE</p>
-                    <p className="text-white font-bold cursor-pointer ml-2 my-4">CONTACT US</p>
+                    {/* <a className="text-white font-bold cursor-pointer ml-2 my-4">BUY CREDITS</a> */}
+                    <p className="text-white font-bold cursor-pointer ml-2 my-4"><a target='_blank' href="https://www.buildsuite.io/">WHAT IS BUILDSUITE</a></p>
+                    <p className="text-white font-bold cursor-pointer ml-2 my-4"><a target='_blank' href="https://www.buildsuite.io/contact-us">CONTACT US</a></p>
                     <p onClick={() => logout()} className="text-white font-bold cursor-pointer ml-2 my-4">SIGN OUT</p>
                 </div>
 
                 <div className='text-slate-50 text-[10px] text-center'>
                     <p>© 2023 BuildSuite. All Rights Reserved.</p>
 
-                    <div className='flex items-center justify-between mt-2'>
-                        <p>Home Page</p>
-                        <p>Terms of Use</p>
-                        <a className='cursor-pointer' href="/privacy"><p>Privacy Policy</p></a>
+                    <div className='flex items-center justify-between mt-2 mx-[10%]'>
+                        {/* <p>Home Page</p> */}
+                        <a target='_blank' href='https://www.buildsuite.io/terms'>Terms of Use</a>
+                        <a target='_blank' className='cursor-pointer' href='https://www.buildsuite.io/privacy'>Privacy Policy</a>
                     </div>
                 </div>
 
@@ -421,12 +421,15 @@ export default function Home() {
 
 
                     <div className='w-[93%] flex flex-col items-center text-center'>
-                        <button className='w-full max-w-[300px] text-[16px] bg-[#37AD4A] text-white font-semibold py-2 rounded-sm justify-end'>
+                        <a href='https://www.buildsuite.io/ask-for-demo' target='_blank' className='w-full max-w-[300px] text-[16px] bg-[#37AD4A] text-white font-semibold py-2 rounded-sm justify-end'>
+
                             ASK FOR DEMO
-                        </button>
-                        <button className='mt-5 text-[#37AD4A] font-semibold'>
+
+                        </a>
+
+                        <a href='https://www.buildsuite.io' target='_blank' className='mt-5 text-[#37AD4A] font-semibold'>
                             VISIT WEBSITE
-                        </button>
+                        </a>
                     </div>
 
 
@@ -446,7 +449,7 @@ export default function Home() {
                     <Image alt='BuildSuite Logo' src={"/logo3.png"} width={40} height={40} className=' h-[5vh] w-auto' />
 
                     <div className='flex items-center justify-end '>
-                        <p className='mr-4 bg-[#37AD4A] text-white text-[12px] rounded-full px-3 py-1'>0 / 10 Credits</p>
+                        {/* <p className='mr-4 bg-[#37AD4A] text-white text-[12px] rounded-full px-3 py-1'>0 / 10 Credits</p> */}
                         <MdMenu onClick={() => showSideNav(true)} className="text-[28px] cursor-pointer text-slate-800" ></MdMenu>
                     </div>
                 </nav>
@@ -525,9 +528,11 @@ export default function Home() {
                                 <div className='flex items-start justify-start mb-8'>
                                     <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <div className=''>
-                                        {data.answer?.response != undefined ? <p className='font-normal text-[16px] text-black'>{data.answer?.response}</p>
-                                            : loader ? <p className='font-normal text-[16px] text-black'>{textLoader}</p>
-                                                : <p className='font-normal text-[16px] text-black'>Please hang on we&apos;re fixing it 🔧🚀.</p>}
+                                        {
+                                            chats.length > 1 && data.answer?.response != undefined && <div className='font-normal text-[16px] text-black'>{data.answer?.response}</div>}
+                                        {chats.length == 1 && loader ? <p className='font-normal text-[16px] text-black'>{textLoader}</p>
+                                            : <p className='font-normal text-[16px] text-black'>Please hang on we&apos;re fixing it 🔧🚀.</p>
+                                        }
                                         <br></br>
 
                                         {data.answer?.sources && <i className='text-slate-400 mb-2'>Reference</i>}
@@ -541,10 +546,10 @@ export default function Home() {
 
 
 
-                                        <div className='flex items-center justify-start'>
+                                        {data.answer?.response != undefined && !loader && <div className='flex items-center justify-start'>
                                             <MdThumbUp onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(true, data.answer?.query_id ?? "")} className={data.isLiked != null && data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
                                             <MdThumbDown onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(false, data.answer?.query_id ?? "")} className={data.isLiked != null && !data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
-                                        </div>
+                                        </div>}
 
 
                                         {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>
@@ -568,7 +573,7 @@ export default function Home() {
                         <div className='flex items-start justify-start mb-8'>
                             <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] object-cover w-auto mr-3' />
                             <div className=''>
-                                {!loader ? <p className='font-normal text-[16px] text-black'>{chats[chats.length - 1].answer?.response ?? "Please hang on we're fixing it 🔧🚀."}</p> :
+                                {!loader ? <div className='font-normal text-[16px] text-black'>{chats[chats.length - 1].answer?.response ?? "Please hang on we're fixing it 🔧🚀."}</div> :
                                     <p className='font-normal text-[16px] text-black'> {textLoader}</p>}
                                 <br></br>
 
@@ -580,10 +585,10 @@ export default function Home() {
                                     })}
                                 </ol>
 
-                                <div className='flex items-center justify-start'>
+                                {chats[chats.length - 1].answer?.response != undefined && !loader && <div className='flex items-center justify-start'>
                                     <MdThumbUp onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(true, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
                                     <MdThumbDown onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(false, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && !chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
-                                </div>
+                                </div>}
 
 
                                 {/* <p className='mb-5 text-[#868686]'><i>Reference <span className='text-black underline'>KMBR 2023</span></i></p>

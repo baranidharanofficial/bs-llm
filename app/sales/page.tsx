@@ -104,7 +104,7 @@ export default function BetaRegister() {
                 <input
                     value={role}
                     autoComplete="off"
-                    placeholder="Current Role"
+                    placeholder="Role"
                     onChange={(evt) => setRole(evt.target.value)}
                     className="text-black bg-white  px-4 py-3 outline-none shadow-sm rounded-sm border-[2px] border-slate-200 w-[320px] bg-transparent text-[14px] mb-4 focus:border-[#143F8D]"
                 />
