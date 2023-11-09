@@ -8,6 +8,8 @@ const montserrat = Montserrat({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'PARK - Your Construction Companion',
   description: 'Park by BuildSuite - Construction Management Application',
+  icons: '/favicon.ico',
+  metadataBase: new URL('https://i.ytimg.com'),
   openGraph: {
     images: "https://i.ytimg.com/vi/xJJCN0Xgbig/sddefault.jpg"
   },
