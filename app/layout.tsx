@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   title: 'PARK - Your Construction Companion',
   description: 'Park by BuildSuite - Construction Management Application',
   icons: '/favicon.ico',
-  metadataBase: new URL('https://i.ytimg.com'),
+  metadataBase: new URL('https://bs-llm.vercel.app'),
   openGraph: {
-    images: "https://i.ytimg.com/vi/xJJCN0Xgbig/sddefault.jpg"
+    images: "https://bs-llm.vercel.app/_next/image?url=%2F3d-logo.png&w=256&q=75"
   },
 }
 
