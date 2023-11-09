@@ -8,7 +8,7 @@ const handler = NextAuth({
             clientSecret: process.env.CLIENT_SECRET ?? ""
         })
     ],
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: "64696cf5ebad83857a8d56c4d1be09d0",
     callbacks: {
         async session({ session, token, user }) {
             // console.log(user.email);
