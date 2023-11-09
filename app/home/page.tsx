@@ -475,7 +475,7 @@ export default function Home() {
                             return <div key={index}>
                                 <div className='flex items-start justify-start mb-4'>
                                     <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[35px] w-[30px] bg-cover mr-3 rounded-b-sm rounded-t-md' />
-                                    <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query + "?"}</p>
+                                    <p className=' font-semibold text-[16px] text-[#143F8D]'>{data.query}</p>
                                 </div>
 
                                 <div className='flex items-start justify-start mb-8'>
@@ -516,7 +516,7 @@ export default function Home() {
                     {chats.length > 1 && <div key={chats[chats.length - 1].query}>
                         <div className='flex items-start justify-start mb-4'>
                             <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[30px] w-[30px] object-fill rounded-md mr-3' />
-                            <p className=' font-semibold text-[16px] text-[#143F8D]'>{chats[chats.length - 1].query + "?"}</p>
+                            <p className=' font-semibold text-[16px] text-[#143F8D]'>{chats[chats.length - 1].query}</p>
                         </div>
 
                         <div className='flex items-start justify-start mb-8'>
