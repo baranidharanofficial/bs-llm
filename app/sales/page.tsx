@@ -47,7 +47,7 @@ export default function BetaRegister() {
                 "organisation": organization,
                 "role": role,
                 "country": country,
-                "consent-marketing": "True"
+                "consent-marketing": marketing ? "True" : "False"
             });
 
             console.log(raw);
@@ -159,7 +159,7 @@ export default function BetaRegister() {
                 </button>
             </form>
 
-            <a className="text-[#143F8D] underline mt-3" href="/home">Skip and Continue</a>
+            {/* <a className="text-[#143F8D] underline mt-3" href="/home">Skip and Continue</a> */}
         </div>
     );
 }
