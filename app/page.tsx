@@ -40,6 +40,7 @@ export default function Login() {
           .then((result: string) => {
             console.log(result);
             localStorage.setItem("token", JSON.parse(result)['JWT']);
+            localStorage.setItem("user_exists", JSON.parse(result)['user_exists']);
             navigate.push('/sales');
           })
           .catch((error: any) => console.log('error', error));

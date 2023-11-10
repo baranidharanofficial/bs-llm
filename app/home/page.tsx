@@ -50,6 +50,7 @@ export default function Home() {
     const [showBS, setShowBS] = useState(false);
     const [showFeedbackID, setShowFeedbackID] = useState("");
 
+
     const [chats, setChats] = useState<Chat[]>([]);
 
     const [models, setModels] = useState<Model[]>([]);
@@ -309,6 +310,7 @@ export default function Home() {
             .then((result: string) => {
                 console.log(JSON.parse(result));
                 setShowFeedbackID("");
+                setFeedback("");
                 setMainLoader(false);
             })
             .catch((error: any) => console.log('error', error));
@@ -317,7 +319,7 @@ export default function Home() {
     const chatLogout = async () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", localStorage.getItem("token") ?? "");
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token") ?? "");
 
         const raw = JSON.stringify({
             "email": session?.user.email
@@ -372,7 +374,9 @@ export default function Home() {
 
     return (
         <main className="h-[100vh] w-[100vw] bg-gray-50 text-black flex flex-col items-center overflow-hidden">
-
+            {mainLoader && <div className='w-screen h-screen bg-[#00000052] text-white text-whi] absolute top-0 left-0 flex items-center justify-center z-50'>
+                <p>Loading...</p>
+            </div>}
             <div className={sideNav ? "w-[250px] translate-x-[0px] duration-300 z-10 fixed right-0 top-0 h-full bg-[#143F8D] shadow-2xl p-4 flex flex-col justify-between" : "w-[250px] translate-x-[250px] duration-300 z-10 fixed right-0 top-0 h-full bg-[#143F8D] shadow-2xl p-4 flex-col justify-between flex"}>
                 <div>
                     <div className='flex items-center justify-between w-full mb-10'>
@@ -400,16 +404,18 @@ export default function Home() {
 
 
             {showFeedbackID.length > 0 && <div className='absolute z-50 top-0 left-0 w-[100vw] h-[100dvh] pt-6 pb-20 px-6 bg-[#143e8d53] flex items-center justify-center'>
-                <div className='bg-white w-[30%] max-sm:w-[90%] rounded-sm p-5'>
+                <div className='bg-white w-[400px] max-sm:w-[320px] rounded-sm p-5'>
 
-                    <div className='flex items-center justify-between mb-4'>
+                    <div className='flex items-center justify-between mb-0'>
                         <p className='font-semibold text-[18px]'>Send feedback</p>
-                        <MdClose onClick={() => setShowFeedbackID("")} className="text-[24px]"></MdClose>
+                        <MdClose onClick={() => { setShowFeedbackID(""); setFeedback(""); }} className="text-[24px]"></MdClose>
                     </div>
 
-                    <textarea rows={2} value={feedback} onChange={(evt) => setFeedback(evt.target.value)} placeholder="Ask your question here." className="text-black bg-slate-200 h-30 max-h-40 p-2 border-none outline-none w-full bg-transparent text-[14px] mb-4" />
+                    <p className='text-[12px] w-[80%] mb-4'>Your feedback is very important to improve the abilities or PARK.</p>
 
-                    <button onClick={() => addFeedback()} className='bg-[#37AD4A] w-full p-2 rounded-sm text-[14px] font-semibold text-white'>Submit</button>
+                    <textarea rows={5} value={feedback} onChange={(evt) => setFeedback(evt.target.value)} placeholder="Type your feedback..." className="text-black bg-neutral-200 h-30 max-h-40 p-2 border-none outline-none w-full bg-transparent text-[14px] mb-4" />
+
+                    <button onClick={() => !mainLoader && addFeedback()} className='bg-[#37AD4A] w-full p-2 rounded-sm text-[14px] font-semibold text-white'>{mainLoader ? "Submitting..." : "Submit"}</button>
                 </div>
             </div>}
 
@@ -504,7 +510,7 @@ export default function Home() {
 
                                         {data.answer?.sources && <i className='text-slate-400 mb-2'>Reference</i>}
                                         <br></br>
-                                        <ol className=' mb-5 list-inside list-decimal text-slate-400'>
+                                        <ol className='mb-6 list-inside list-disc text-slate-400'>
                                             {data.answer?.sources.map((data, index) => {
                                                 return <li key={index} className='mb-1'><i>{data[0]}</i></li>
                                             })}
@@ -513,9 +519,14 @@ export default function Home() {
 
 
 
-                                        {data.answer?.response != undefined && !loader && <div className='flex items-center justify-start'>
-                                            <MdThumbUp onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(true, data.answer?.query_id ?? "")} className={data.isLiked != null && data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
-                                            <MdThumbDown onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(false, data.answer?.query_id ?? "")} className={data.isLiked != null && !data.isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
+                                        {data.answer?.response != undefined && <div className='flex items-center justify-start text-[18px]'>
+                                            <div onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(true, data.answer?.query_id ?? "")} className='p-2'>
+                                                <MdThumbUp className={data.isLiked != null && data.isLiked ? "text-[#143F8D] mr-1 cursor-pointer" : "text-slate-400 mr-1 cursor-pointer"}></MdThumbUp>
+                                            </div>
+                                            <div onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(false, data.answer?.query_id ?? "")} className='p-2'>
+                                                <MdThumbDown className={data.isLiked != null && !data.isLiked ? "text-[#143F8D] mr-1 cursor-pointer" : "text-slate-400 mr-1 cursor-pointer"}></MdThumbDown>
+                                            </div>
+
                                         </div>}
 
                                     </div>
@@ -542,15 +553,20 @@ export default function Home() {
 
                                 {chats[chats.length - 1].answer?.sources && <i className='text-slate-400 mb-2'>Reference</i>}
 
-                                <ol className=' mb-5 list-inside list-decimal text-slate-400'>
+                                <ol className=' mb-5 list-inside list-disc text-slate-400'>
                                     {chats[chats.length - 1].answer?.sources.map((data, index) => {
                                         return <li key={index} className='mb-1'><i>{data[0]}</i></li>
                                     })}
                                 </ol>
 
-                                {chats[chats.length - 1].answer?.response != undefined && !loader && <div className='flex items-center justify-start'>
-                                    <MdThumbUp onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(true, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbUp>
-                                    <MdThumbDown onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(false, chats[chats.length - 1].answer?.query_id ?? "")} className={chats[chats.length - 1].isLiked != null && !chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-2 cursor-pointer" : "text-slate-400 mr-2 cursor-pointer"}></MdThumbDown>
+                                {chats[chats.length - 1].answer?.response != undefined && !loader && <div className='flex items-center justify-start text-[18px]'>
+                                    <div onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(true, chats[chats.length - 1].answer?.query_id ?? "")} className='p-2'>
+                                        <MdThumbUp className={chats[chats.length - 1].isLiked != null && chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-1 cursor-pointer" : "text-slate-400 mr-1 cursor-pointer"}></MdThumbUp>
+                                    </div>
+                                    <div onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(false, chats[chats.length - 1].answer?.query_id ?? "")} className='p-2'>
+                                        <MdThumbDown className={chats[chats.length - 1].isLiked != null && !chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-1 cursor-pointer" : "text-slate-400 mr-1 cursor-pointer"}></MdThumbDown>
+                                    </div>
+
                                 </div>}
 
 

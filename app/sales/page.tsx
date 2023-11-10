@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { constants } from "../constants/constants";
+import { MdCheck } from "react-icons/md";
 
 export default function BetaRegister() {
 
@@ -14,6 +15,11 @@ export default function BetaRegister() {
     const [organization, setOrganization] = useState("");
     const [country, setCountry] = useState("");
 
+    const [terms, setTerms] = useState(false);
+    const [marketing, setMarketing] = useState(false);
+
+    const [error, setError] = useState(false);
+
     const { data: session } = useSession();
     const navigate = useRouter();
 
@@ -22,43 +28,53 @@ export default function BetaRegister() {
         setName(session?.user?.name.split(' ')[0]);
         setEmail(session?.user?.email);
         console.log(session?.user?.name);
-        if (session?.user && localStorage.getItem("token") == null && localStorage.getItem("token") == undefined) {
-
-            const login = async () => {
-                const myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
-
-                const raw = JSON.stringify({
-                    "email": session.user?.email,
-                    "uid": session.user?.id,
-                    "profile_pic": session.user?.image,
-                    "name": session.user?.name,
-                });
-
-                console.log(raw);
-
-                const requestOptions: RequestInit = {
-                    method: 'POST',
-                    headers: myHeaders,
-                    body: raw,
-                    redirect: 'follow',
-                };
-
-                await fetch(`${constants.BASE_URL}login`, requestOptions)
-                    .then((response: Response) => response.text())
-                    .then((result: string) => {
-                        console.log(result);
-                        localStorage.setItem("token", JSON.parse(result)['JWT']);
-                        // navigate.push('/home');
-                    })
-                    .catch((error: any) => console.log('error', error));
-            }
-
-            // login();
-        } else if (session?.user) {
-            // navigate.push('/home');
+        if (session?.user && localStorage.getItem("user_exists") === "1") {
+            navigate.push("/home");
         }
     }, [session]);
+
+
+    const submitForm = async () => {
+        if (terms) {
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token") ?? "");
+
+            const raw = JSON.stringify({
+                "email": session?.user?.email,
+                "name": session?.user?.name,
+                "phone": phone,
+                "organisation": organization,
+                "role": role,
+                "country": country,
+                "consent-marketing": "True"
+            });
+
+            console.log(raw);
+
+            const requestOptions: RequestInit = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow',
+            };
+
+            await fetch(`${constants.BASE_URL}user_info`, requestOptions)
+                .then((response: Response) => response.text())
+                .then((result: string) => {
+                    console.log(result);
+                    setPhone("");
+                    setCountry("");
+                    setOrganization("");
+                    setRole("");
+                    navigate.push('/home');
+                })
+                .catch((error: any) => console.log('error', error));
+        } else {
+            setError(true);
+        }
+
+    }
 
 
 
@@ -66,7 +82,7 @@ export default function BetaRegister() {
         <div className="h-screen w-screen bgimg text-slate-900 flex flex-col items-center justify-center">
             <h1 className="text-[24px] font-bold mb-6">Register as a Beta user</h1>
 
-            <form className="flex flex-col items-center" onSubmit={(evt) => { evt.preventDefault(); }}>
+            <form className="flex flex-col items-center" onSubmit={(evt) => { evt.preventDefault(); submitForm(); }}>
                 <input
                     value={name}
                     autoComplete="off"
@@ -118,7 +134,8 @@ export default function BetaRegister() {
                 />
 
                 <div className=" flex items-start justify-between mb-4 w-[320px] text-[12px]">
-                    <div className=" h-4 w-4 rounded-sm border-[2px] border-slate-400 bg-white mt-2 cursor-pointer">
+                    <div onClick={() => { setError(false); setTerms(!terms); }} className={terms ? "h-5 w-5 rounded-sm border-[2px] border-green-200 bg-[#37AD4A] mt-2 cursor-pointer flex items-center justify-center" : "h-5 w-5 rounded-sm border-[2px] border-slate-400 bg-white mt-2 cursor-pointer"}>
+                        {terms && <MdCheck className="text-white"></MdCheck>}
                     </div>
                     <p className="w-[90%] text-justify">
                         I understand that &apos;Park&apos; is in Beta and may make mistakes. I&apos;m willing to help improve the model.
@@ -127,12 +144,15 @@ export default function BetaRegister() {
 
 
                 <div className=" flex items-start justify-between mb-4 w-[320px] text-[12px]">
-                    <div className=" h-4 w-4 rounded-sm border-[2px] border-slate-400 bg-white cursor-pointer">
+                    <div onClick={() => setMarketing(!marketing)} className={marketing ? "h-5 w-5 rounded-sm border-[2px] border-green-200 bg-[#37AD4A] cursor-pointer flex items-center justify-center" : "h-5 w-5 rounded-sm border-[2px] border-slate-400 bg-white cursor-pointer"}>
+                        {marketing && <MdCheck className="text-white"></MdCheck>}
                     </div>
                     <p className="w-[90%] text-justify">
                         I agree to receive promotional messages
                     </p>
                 </div>
+
+                {error && <p className="text-red-500 text-[12px]">* Accept Terms & Conditions</p>}
 
                 <button type="submit" className="bg-[#143F8D] text-white w-[320px] py-3 mt-4 font-semibold" >
                     Submit
