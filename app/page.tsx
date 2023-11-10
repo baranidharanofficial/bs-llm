@@ -68,9 +68,9 @@ export default function Login() {
         <button className=" bg-[#37AD4A] w-[300px] h-[48px] rounded-[2px] p-3 mb-20">Continue with Mobile number</button>
       </Link> */}
       <Image src="/logo2.png" alt="Logo Image" width={100} height={100} className=" h-[30px] w-auto mb-5" />
-      <div className="w-[180px] flex items-center justify-between">
-        <p className="text-[12px] text-[#D6D6D6]">Terms of use</p>
-        <p className="text-[12px] text-[#D6D6D6]">Privacy Policy</p>
+      <div className="w-[180px] flex items-center justify-between text-[12px] text-[#D6D6D6]">
+        <a target='_blank' className='cursor-pointer' href="https://www.buildsuite.io/terms">Terms of use</a>
+        <a target='_blank' className='cursor-pointer' href='https://www.buildsuite.io/privacy'>Privacy Policy</a>
       </div>
     </div>
   );

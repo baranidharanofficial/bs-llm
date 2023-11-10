@@ -380,7 +380,7 @@ export default function Home() {
             <div className={sideNav ? "w-[250px] translate-x-[0px] duration-300 z-10 fixed right-0 top-0 h-full bg-[#143F8D] shadow-2xl p-4 flex flex-col justify-between" : "w-[250px] translate-x-[250px] duration-300 z-10 fixed right-0 top-0 h-full bg-[#143F8D] shadow-2xl p-4 flex-col justify-between flex"}>
                 <div>
                     <div className='flex items-center justify-between w-full mb-10'>
-                        <Image alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className=' h-[25px] w-auto' />
+                        <img alt='BuildSuite Logo' src={"/logo2.png"} width={40} height={40} className=' h-[25px] w-auto' />
                         <MdClose onClick={() => showSideNav(false)} className="text-[24px] cursor-pointer text-white"></MdClose>
                     </div>
 
@@ -473,7 +473,7 @@ export default function Home() {
                 <div ref={divRef} className="h-[72%] flex flex-col smooth-scroll overflow-x-hidden overflow-y-auto max-lg:px-[3vw] px-3">
 
                     <div className='flex items-start justify-start mt-2 mb-8'>
-                        <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                        <img src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                         <div>
                             <p className='text-[#143F8D] font-medium text-[24px] mb-1'>Welcome to &apos;Park&apos;</p>
                             <p className='text-[#143F8D] font-medium text-[20px] mb-4'>Your Construction Companion!</p>
@@ -500,7 +500,7 @@ export default function Home() {
                                 </div>
 
                                 <div className='flex items-start justify-start mb-8'>
-                                    <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
+                                    <img src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <div className=''>
                                         {loader && chats.length <= 1 && <p className='font-normal text-[16px] text-black'>{textLoader}</p>}
                                         {data.answer?.response != undefined && <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: data.answer?.response }}></div>}
@@ -545,7 +545,7 @@ export default function Home() {
                         </div>
 
                         <div className='flex items-start justify-start mb-8'>
-                            <Image src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] object-cover w-auto mr-3' />
+                            <img src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] object-cover w-auto mr-3' />
                             <div className=''>
                                 {!loader ? <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: chats[chats.length - 1].answer?.response ?? "Please hang on we're fixing it 🔧🚀." }}></div> :
                                     <p className='font-normal text-[16px] text-black'> {textLoader}</p>}
