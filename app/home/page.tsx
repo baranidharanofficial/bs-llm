@@ -41,7 +41,7 @@ export default function Home() {
         msg: "",
         session_id: "",
         query_id: "",
-        response: "Park is typing..."
+        response: "Park is typing"
     });
     const [queryID, setQueryID] = useState("");
     const [feedback, setFeedback] = useState("");
@@ -65,8 +65,13 @@ export default function Home() {
 
     const navigate = useRouter();
 
+
     useEffect(() => {
         startLoader();
+    }, [])
+
+    useEffect(() => {
+
         if (session?.user) {
             const getModels = async () => {
                 const myHeaders = new Headers();
@@ -346,7 +351,12 @@ export default function Home() {
                 setFeedback("");
                 setMainLoader(false);
             })
-            .catch((error: any) => console.log('error', error));
+            .catch((error: any) => {
+                console.log('error', error);
+                setShowFeedbackID("");
+                setFeedback("");
+                setMainLoader(false);
+            });
     }
 
     const chatLogout = async () => {
@@ -402,7 +412,7 @@ export default function Home() {
             setTextLoader('Park is typing' + dotString);
             dots = (dots + 1) % 4;
         }
-        setInterval(updateTextLoader, 2000);
+        setInterval(updateTextLoader, 1000);
     }
 
     return (
@@ -535,7 +545,8 @@ export default function Home() {
                                 <div className='flex items-start justify-start mb-8'>
                                     <img src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <div className=''>
-                                        {data.answer?.response != undefined && <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: data.answer?.response }}></div>}
+                                        {data.answer?.response.includes("Park is typing") && <p className='font-normal text-[16px] text-black'>{textLoader}</p>}
+                                        {data.answer?.response != undefined && !data.answer?.response.includes("Park is typing") && <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: data.answer?.response }}></div>}
                                         <br></br>
 
                                         {data.answer?.sources != undefined && data.answer?.sources.length > 0 && <i className='text-slate-400 mb-2'>Reference</i>}
