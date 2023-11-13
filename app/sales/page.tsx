@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { constants } from "../constants/constants";
 import { MdCheck } from "react-icons/md";
 
@@ -18,6 +18,8 @@ export default function BetaRegister() {
     const [terms, setTerms] = useState(false);
     const [marketing, setMarketing] = useState(false);
 
+    const [loader, setLoader] = useState(false);
+
     const [error, setError] = useState(false);
 
     const { data: session } = useSession();
@@ -28,10 +30,17 @@ export default function BetaRegister() {
         setName(session?.user?.name.split(' ')[0]);
         setEmail(session?.user?.email);
         console.log(session?.user?.name);
+        if (session?.user && localStorage.getItem("user_exists") === "1") {
+            navigate.push("/home");
+        } else {
+            navigate.push('/sales');
+        }
     }, [session]);
 
 
-    const submitForm = async () => {
+    const submitForm = async (evt: FormEvent<HTMLFormElement>) => {
+        evt.preventDefault();
+        setLoader(true);
         if (terms) {
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
@@ -56,19 +65,24 @@ export default function BetaRegister() {
                 redirect: 'follow',
             };
 
-            await fetch(`${constants.BASE_URL}user_info`, requestOptions)
-                .then((response: Response) => response.text())
-                .then((result: string) => {
-                    console.log(result);
-                    setPhone("");
-                    setCountry("");
-                    setOrganization("");
-                    setRole("");
-                    navigate.push('/home');
-                })
-                .catch((error: any) => console.log('error', error));
+            if (!loader) {
+                await fetch(`${constants.BASE_URL}user_info`, requestOptions)
+                    .then((response: Response) => response.text())
+                    .then((result: string) => {
+                        console.log(result);
+                        setPhone("");
+                        setCountry("");
+                        setOrganization("");
+                        setRole("");
+                        setLoader(false);
+                        navigate.push('/home');
+                    })
+                    .catch((error: any) => console.log('error', error));
+            }
+
         } else {
             setError(true);
+            setLoader(false);
         }
 
     }
@@ -79,7 +93,7 @@ export default function BetaRegister() {
         <div className="h-screen w-screen bgimg text-slate-900 flex flex-col items-center justify-center">
             <h1 className="text-[24px] font-bold mb-6">Register as a Beta user</h1>
 
-            <form className="flex flex-col items-center" onSubmit={(evt) => { evt.preventDefault(); submitForm(); }}>
+            <form className="flex flex-col items-center" onSubmit={(evt) => submitForm(evt)}>
                 <input
                     value={name}
                     autoComplete="off"
@@ -152,7 +166,7 @@ export default function BetaRegister() {
                 {error && <p className="text-red-500 text-[12px]">* Accept Terms & Conditions</p>}
 
                 <button type="submit" className="bg-[#143F8D] text-white w-[320px] py-3 mt-4 font-semibold" >
-                    Submit
+                    {loader ? "Submitting..." : 'Submit'}
                 </button>
             </form>
 
