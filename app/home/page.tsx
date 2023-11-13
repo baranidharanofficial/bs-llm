@@ -598,7 +598,7 @@ export default function Home() {
                                     })}
                                 </ol>
 
-                                {chats[chats.length - 1].answer?.response != undefined && !loader && <div className='flex items-center justify-start text-[18px]'>
+                                {chats[chats.length - 1].answer.query_id.length > 0 && !loader && <div className='flex items-center justify-start text-[18px]'>
                                     <div onClick={() => chats[chats.length - 1].isLiked == null && chats[chats.length - 1].answer?.response != undefined && addReaction(true, chats[chats.length - 1].answer?.query_id ?? "")} className='p-2'>
                                         <MdThumbUp className={chats[chats.length - 1].isLiked != null && chats[chats.length - 1].isLiked ? "text-[#143F8D] mr-1 cursor-pointer" : "text-slate-400 mr-1 cursor-pointer"}></MdThumbUp>
                                     </div>
