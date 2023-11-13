@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   icons: '/favicon.ico',
   metadataBase: new URL('https://bs-llm.vercel.app'),
   themeColor: {
-    color: 'white'
+    color: '#ffffff'
   },
   openGraph: {
     images: "https://bs-llm.vercel.app/_next/image?url=%2F3d-logo.png&w=256&q=75"
