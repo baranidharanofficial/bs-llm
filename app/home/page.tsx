@@ -10,7 +10,7 @@ import { constants } from '../constants/constants';
 
 interface Chat {
     query: string;
-    answer?: ChatResponse | null;
+    answer: ChatResponse;
     isLiked: boolean | null;
 }
 
@@ -36,7 +36,13 @@ export default function Home() {
     const [place, setPlace] = useState("");
     const [showChat, setShowChat] = useState(false);
     const [query, setQuery] = useState("");
-    const [currentResponse, setCurrentResponse] = useState<ChatResponse>();
+    const [currentResponse, setCurrentResponse] = useState<ChatResponse>({
+        sources: [],
+        msg: "",
+        session_id: "",
+        query_id: "",
+        response: "Park is typing..."
+    });
     const [queryID, setQueryID] = useState("");
     const [feedback, setFeedback] = useState("");
     const [currentLike, setCurrentLike] = useState("");
@@ -201,7 +207,13 @@ export default function Home() {
 
             let cChat: Chat = {
                 query: query,
-                answer: null,
+                answer: {
+                    response: textLoader,
+                    msg: "",
+                    query_id: "",
+                    session_id: "",
+                    sources: [],
+                },
                 isLiked: null,
             }
             setChats([...chats, cChat]);
@@ -274,7 +286,21 @@ export default function Home() {
                 fetch(`${constants.BASE_URL}create_query`, requestOptions),
                 new Promise((_, reject) =>
                     setTimeout(() => {
-                        reject(new Error('API call timed out'));
+
+                        if (chats[chats.length - 1]?.answer.query_id.length > 0) {
+                            reject(new Error('API call timed out'));
+                        } else {
+                            reject(setCurrentResponse({
+                                sources: [],
+                                msg: "",
+                                session_id: "",
+                                query_id: "",
+                                response: "Increased demand on our site! Possible delays ahead. Your patience is valued during this busy period. 🚀🔄"
+                            }));
+                        }
+
+
+
                     }, apiCallTimeout)
                 ),
             ]);
@@ -470,7 +496,7 @@ export default function Home() {
 
 
                 <nav className="h-[7%] w-full max-sm:shadow-md flex items-center justify-between max-lg:px-[3vw] px-3">
-                    <img alt='BuildSuite Logo' src={"/logo3.png"} width={40} height={40} className=' h-[5vh] w-auto' />
+                    <img alt='BuildSuite Logo' src={"/logo.png"} width={40} height={40} className=' h-[5vh] w-auto' />
 
                     <div className='flex items-center justify-end '>
                         {/* <p className='mr-4 bg-[#37AD4A] text-white text-[12px] rounded-full px-3 py-1'>0 / 10 Credits</p> */}
@@ -510,15 +536,10 @@ export default function Home() {
                                 <div className='flex items-start justify-start mb-8'>
                                     <img src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <div className=''>
-                                        {loader && chats.length <= 1 && <p className='font-normal text-[16px] text-black'>{textLoader}</p>}
-
                                         {data.answer?.response != undefined && <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: data.answer?.response }}></div>}
-
-                                        {data.answer?.response == undefined && <p className='font-normal text-[16px] text-black'>Increased demand on our site! Possible delays ahead. Your patience is valued during this busy period. 🚀🔄</p>
-                                        }
                                         <br></br>
 
-                                        {data.answer?.sources && <i className='text-slate-400 mb-2'>Reference</i>}
+                                        {data.answer?.sources != undefined && data.answer?.sources.length > 0 && <i className='text-slate-400 mb-2'>Reference</i>}
                                         <br></br>
                                         <ol className='mb-6 list-inside list-disc text-slate-400'>
                                             {data.answer?.sources.map((data, index) => {
@@ -527,9 +548,7 @@ export default function Home() {
                                         </ol>
 
 
-
-
-                                        {data.answer?.response != undefined && <div className='flex items-center justify-start text-[18px]'>
+                                        {data.answer?.query_id.length > 0 && <div className='flex items-center justify-start text-[18px]'>
                                             <div onClick={() => data.isLiked == null && data.answer?.response != undefined && addReaction(true, data.answer?.query_id ?? "")} className='p-2'>
                                                 <MdThumbUp className={data.isLiked != null && data.isLiked ? "text-[#143F8D] mr-1 cursor-pointer" : "text-slate-400 mr-1 cursor-pointer"}></MdThumbUp>
                                             </div>
@@ -561,7 +580,7 @@ export default function Home() {
                                     <p className='font-normal text-[16px] text-black'> {textLoader}</p>}
                                 <br></br>
 
-                                {chats[chats.length - 1].answer?.sources && <i className='text-slate-400 mb-2'>Reference</i>}
+                                {chats[chats.length - 1].answer?.sources != undefined && chats[chats.length - 1].answer?.sources?.length > 0 && <i className='text-slate-400 mb-2'>Reference</i>}
 
                                 <ol className=' mb-5 list-inside list-disc text-slate-400'>
                                     {chats[chats.length - 1].answer?.sources.map((data, index) => {
