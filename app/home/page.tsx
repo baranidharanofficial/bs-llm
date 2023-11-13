@@ -484,7 +484,7 @@ export default function Home() {
                         <img src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                         <div>
                             <p className='text-[#143F8D] font-semibold text-[24px] mb-1'>Hi {session?.user?.name.split(' ')[0]}</p>
-                            <p className='text-[#143F8D] font-medium text-[20px] mb-4'>I'm Park - Your construction companion</p>
+                            <p className='text-[#143F8D] font-medium text-[20px] mb-4'>I&apos;m Park - Your construction companion</p>
                             <ul className='list-inside list-disc text-[14px]'>
                                 <li>I am your trusty companion for construction queries, covering building codes, state-specific rules (e.g., Kerala, Karnataka), and Indian standards.</li>
                                 <li>As a Beta user, your feedback is crucial in refining me to be more accurate and helpful.</li>
