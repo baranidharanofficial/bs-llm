@@ -17,8 +17,8 @@
 }
 
 body {
-  background-color: white !important;
   color: white;
+  background: linear-gradient(#143F8D, white);
 }
 
 .nav-slide {
