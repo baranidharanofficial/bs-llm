@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdMenu, MdClose, MdThumbUp, MdThumbDown } from 'react-icons/md';
 import { constants } from '../constants/constants';
-import { preventOverscroll } from '../../public/preventOverscroll';
 
 
 interface Chat {
@@ -65,11 +64,6 @@ export default function Home() {
     const { data: session } = useSession();
 
     const navigate = useRouter();
-
-
-    useEffect(() => {
-        preventOverscroll();
-    }, []);
 
     useEffect(() => {
         startLoader();

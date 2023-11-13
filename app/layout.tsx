@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   description: 'Park by BuildSuite - Construction Management Application',
   icons: '/favicon.ico',
   metadataBase: new URL('https://bs-llm.vercel.app'),
+  themeColor: {
+    color: 'white'
+  },
   openGraph: {
     images: "https://bs-llm.vercel.app/_next/image?url=%2F3d-logo.png&w=256&q=75"
   },
