@@ -18,7 +18,15 @@
 
 body {
   color: white;
-  background: linear-gradient(#143F8D, white);
+  background-color: white;
+}
+
+.user-form {
+  color: black;
+}
+
+.user-form input {
+  color: black;
 }
 
 .nav-slide {
