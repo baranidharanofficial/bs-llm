@@ -267,22 +267,30 @@ export default function Home() {
             redirect: 'follow',
         };
 
-        await fetch(`${constants.BASE_URL}create_query`, requestOptions)
-            .then(async (response: Response) => {
-                if (response.status == 401) {
-                    await logout();
-                }
-                return response.text();
-            })
-            .then((result: string) => {
-                console.log(JSON.parse(result));
-                setCurrentResponse(JSON.parse(result));
-            })
-            .catch((error: any) => {
-                console.log('error', error);
-                setLoader(false);
-            });
-    }
+        const apiCallTimeout = 90000; // 5 seconds timeout (adjust as needed)
+
+        try {
+            const response: any = await Promise.race([
+                fetch(`${constants.BASE_URL}create_query`, requestOptions),
+                new Promise((_, reject) =>
+                    setTimeout(() => {
+                        reject(new Error('API call timed out'));
+                    }, apiCallTimeout)
+                ),
+            ]);
+
+            if (response.status === 401) {
+                await logout();
+            }
+
+            const result = await response.text();
+            console.log(JSON.parse(result));
+            setCurrentResponse(JSON.parse(result));
+        } catch (error) {
+            console.log('error', error);
+            setLoader(false);
+        }
+    };
 
     const addFeedback = async () => {
         setMainLoader(true);
@@ -475,10 +483,10 @@ export default function Home() {
                     <div className='flex items-start justify-start mt-2 mb-8'>
                         <img src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                         <div>
-                            <p className='text-[#143F8D] font-medium text-[24px] mb-1'>Welcome to &apos;Park&apos;</p>
-                            <p className='text-[#143F8D] font-medium text-[20px] mb-4'>Your Construction Companion!</p>
+                            <p className='text-[#143F8D] font-semibold text-[24px] mb-1'>Hi {session?.user?.name.split(' ')[0]}</p>
+                            <p className='text-[#143F8D] font-medium text-[20px] mb-4'>I'm Park - Your construction companion</p>
                             <ul className='list-inside list-disc text-[14px]'>
-                                <li>I am your trusty companion for construction queries, covering building codes, state-specific rules (e.g., Kerala, Karnataka, Delhi NCR), and Indian standards.</li>
+                                <li>I am your trusty companion for construction queries, covering building codes, state-specific rules (e.g., Kerala, Karnataka), and Indian standards.</li>
                                 <li>As a Beta user, your feedback is crucial in refining me to be more accurate and helpful.</li>
                                 <li>Please keep in mind that I am in Beta, and while I strive for accuracy, my responses may not always be 100% precise.</li>
                                 <li>I encourage you to explore me in a friendly and respectful manner - I&apos;m your trusted construction companion!</li>
@@ -503,8 +511,10 @@ export default function Home() {
                                     <img src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] w-auto mr-3' />
                                     <div className=''>
                                         {loader && chats.length <= 1 && <p className='font-normal text-[16px] text-black'>{textLoader}</p>}
+
                                         {data.answer?.response != undefined && <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: data.answer?.response }}></div>}
-                                        {!loader && data.answer?.response == undefined && <p className='font-normal text-[16px] text-black'>Please hang on we&apos;re fixing it 🔧🚀.</p>
+
+                                        {data.answer?.response == undefined && <p className='font-normal text-[16px] text-black'>Increased demand on our site! Possible delays ahead. Your patience is valued during this busy period. 🚀🔄</p>
                                         }
                                         <br></br>
 
@@ -547,7 +557,7 @@ export default function Home() {
                         <div className='flex items-start justify-start mb-8'>
                             <img src="/ideogram.png" alt="" width={30} height={30} className='pt-1 h-[35px] object-cover w-auto mr-3' />
                             <div className=''>
-                                {!loader ? <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: chats[chats.length - 1].answer?.response ?? "Please hang on we're fixing it 🔧🚀." }}></div> :
+                                {!loader ? <div className='font-normal text-[16px] text-black' dangerouslySetInnerHTML={{ __html: chats[chats.length - 1].answer?.response ?? "Increased demand on our site! Possible delays ahead. Your patience is valued during this busy period. 🚀🔄" }}></div> :
                                     <p className='font-normal text-[16px] text-black'> {textLoader}</p>}
                                 <br></br>
 

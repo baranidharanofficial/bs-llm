@@ -28,9 +28,6 @@ export default function BetaRegister() {
         setName(session?.user?.name.split(' ')[0]);
         setEmail(session?.user?.email);
         console.log(session?.user?.name);
-        if (session?.user && localStorage.getItem("user_exists") === "1") {
-            navigate.push("/home");
-        }
     }, [session]);
 
 

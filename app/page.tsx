@@ -41,14 +41,22 @@ export default function Login() {
             console.log(result);
             localStorage.setItem("token", JSON.parse(result)['JWT']);
             localStorage.setItem("user_exists", JSON.parse(result)['user_exists']);
-            navigate.push('/sales');
+            if (session?.user && localStorage.getItem("user_exists") === "1") {
+              navigate.push("/home");
+            } else {
+              navigate.push('/sales');
+            }
           })
           .catch((error: any) => console.log('error', error));
       }
 
       login();
     } else if (session?.user) {
-      navigate.push('/sales');
+      if (session?.user && localStorage.getItem("user_exists") === "1") {
+        navigate.push("/home");
+      } else {
+        navigate.push('/sales');
+      }
     }
   }, [session, navigate]);
 
