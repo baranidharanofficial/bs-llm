@@ -286,28 +286,11 @@ export default function Home() {
         const apiCallTimeout = 90000; // 5 seconds timeout (adjust as needed)
 
         try {
-            const response: any = await Promise.race([
-                fetch(`${constants.BASE_URL}create_query`, requestOptions),
-                new Promise((_, reject) =>
-                    setTimeout(() => {
+            console.time("Result");
+            const response: any = await
+                fetch(`${constants.BASE_URL}create_query`, requestOptions);
 
-                        if (chats[chats.length - 1]?.answer.query_id.length > 0) {
-                            reject(new Error('API call timed out'));
-                        } else {
-                            reject(setCurrentResponse({
-                                sources: [],
-                                msg: "",
-                                session_id: "",
-                                query_id: "",
-                                response: "Increased demand on our site! Possible delays ahead. Your patience is valued during this busy period. 🚀🔄"
-                            }));
-                        }
-
-
-
-                    }, apiCallTimeout)
-                ),
-            ]);
+            console.timeEnd("Result")
 
             if (response.status === 401) {
                 await logout();
@@ -579,7 +562,7 @@ export default function Home() {
 
                     {chats.length > 1 && <div key={chats[chats.length - 1].query}>
                         <div className='flex items-start justify-start mb-4'>
-                            <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[30px] w-[30px] object-fill rounded-md mr-3' />
+                            <img src={session?.user.image} alt="" width={30} height={30} className='pt-1 h-[35px] w-[30px] bg-cover mr-3 rounded-b-sm rounded-t-md' />
                             <p className=' font-semibold text-[16px] text-[#143F8D]'>{chats[chats.length - 1].query}</p>
                         </div>
 
