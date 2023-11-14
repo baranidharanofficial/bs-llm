@@ -283,22 +283,42 @@ export default function Home() {
             redirect: 'follow',
         };
 
-        const apiCallTimeout = 90000; // 5 seconds timeout (adjust as needed)
+        const apiCallTimeout = 90;
 
         try {
-            console.time("Result");
+
+            let count = 1;
+            const timeoutId = setInterval(() => {
+                console.log(count);
+                if (count >= apiCallTimeout) {
+                    setCurrentResponse({
+                        sources: [],
+                        msg: "",
+                        session_id: "",
+                        query_id: "",
+                        response: "Increased demand on our site! Possible delays ahead. Your patience is valued during this busy period. 🚀🔄"
+                    });
+                    new Error('API call timed out');
+                    setDisabled(false);
+                    clearInterval(timeoutId);
+                }
+                count++;
+            }, 1000);
+
             const response: any = await
                 fetch(`${constants.BASE_URL}create_query`, requestOptions);
-
-            console.timeEnd("Result")
 
             if (response.status === 401) {
                 await logout();
             }
 
-            const result = await response.text();
-            console.log(JSON.parse(result));
-            setCurrentResponse(JSON.parse(result));
+            if (count < apiCallTimeout) {
+                const result = await response.text();
+                console.log(JSON.parse(result));
+                setCurrentResponse(JSON.parse(result));
+                clearInterval(timeoutId);
+            }
+
         } catch (error) {
             console.log('error', error);
             setLoader(false);
